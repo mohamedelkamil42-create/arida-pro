@@ -73,7 +73,8 @@ const App: React.FC = () => {
     requests: '',
     witnesses: '',
     documents: '',
-    extraDetails: ''
+    extraDetails: '',
+    additionalStatement: ''
   });
 
   useEffect(() => {
@@ -394,6 +395,10 @@ const App: React.FC = () => {
                   </select>
                 </div>
                 <div className="flex flex-col">
+                  <label className={labelClass}>بيانات إضافية (تظهر في منتصف العريضة - اختياري)</label>
+                  <input type="text" className={inputClass} placeholder="أي بيان إضافي ترغب بوضعه هنا..." value={formData.additionalStatement} onChange={e => setFormData({...formData, additionalStatement: e.target.value})} />
+                </div>
+                <div className="flex flex-col">
                   <label className={labelClass}>رقم الدعوى</label>
                   <input type="text" className={inputClass} placeholder="ق م / ... / 2024" value={formData.caseNumber} onChange={e => setFormData({...formData, caseNumber: e.target.value})} />
                 </div>
@@ -465,6 +470,14 @@ const App: React.FC = () => {
                   <div className="text-center mb-0.5 font-bold text-[14pt]">
                     {formData.defendantName || '....................'} ({getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole)}) - {formData.defendantAddress || '.......'} - {formData.defendantPhone || '.......'}
                   </div>
+                  
+                  {/* Optional Additional Statement Field */}
+                  {formData.additionalStatement && (
+                    <div className="text-center mb-0.5 font-bold text-[13pt] text-slate-900">
+                      {formData.additionalStatement}
+                    </div>
+                  )}
+
                   <div className="text-center mb-1.5 font-bold border-y border-black/10 py-0.5">رقم الدعوى: {formData.caseNumber || '......... / .........'}</div>
                   <div className="text-center mb-2"><span className="font-bold underline decoration-1 underline-offset-4">الموضوع / {formData.subject}</span></div>
                   
@@ -553,7 +566,7 @@ const App: React.FC = () => {
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31 0 2.59.32 3.72.93a6.52 6.52 0 0 1-1.6 4.3 6.51 6.51 0 0 1-4.3 2.02v3.01c2.14 0 4.14.77 5.7 2.07l.01.01c1.55 1.3 2.53 3.24 2.53 5.41 0 3.86-3.14 7-7 7s-7-3.14-7-7a6.97 6.97 0 0 1 1.76-4.6l.01-.01c1.3-1.55 3.24-2.53 5.41-2.53V7.02c-1.89 0-3.64-.74-4.95-1.95L7 4.02C5.7 2.72 5 1 5 0h3.01c0 1.1.45 2.09 1.17 2.81l.01.01c.71.72 1.7 1.17 2.81 1.17V.02zM12.5 14.5c-1.1 0-2.09.45-2.81 1.17l-.01.01c-.72.71-1.17 1.7-1.17 2.81 0 2.21 1.79 4 4 4s4-1.79 4-4c0-1.1-.45-2.09-1.17-2.81l-.01-.01c-.72-.72-1.71-1.17-2.82-1.17z"/></svg>
               </a>
               <a href={`mailto:${SOCIAL_LINKS.email}`} className="text-slate-400 hover:text-blue-500 transition-all hover:-translate-y-1">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 00-2 2z"/></svg>
               </a>
             </div>
 

@@ -39,4 +39,5 @@ export interface FormData {
   witnesses: string;
   documents: string;
   extraDetails: string;
+  additionalStatement: string;
 }
