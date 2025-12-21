@@ -268,7 +268,7 @@ const App: React.FC = () => {
       id={id} 
       lang="ar" 
       dir="rtl" 
-      className="bg-white w-full max-w-[210mm] pt-[30mm] p-[10mm] md:pt-[40mm] md:p-[15mm] shadow-none md:shadow-2xl petition-font text-[14pt] leading-[1.6] min-h-[297mm] relative text-black text-right flex flex-col" 
+      className="bg-white w-full max-w-[210mm] pt-[30mm] p-[10mm] md:pt-[40mm] md:p-[15mm] shadow-none md:shadow-2xl petition-font text-[14pt] leading-[1.6] min-h-[297mm] relative text-black text-right flex flex-col box-border" 
       style={{ direction: 'rtl', unicodeBidi: 'isolate', textAlign: 'right' }}
     >
       {/* Header Layout */}
@@ -293,7 +293,6 @@ const App: React.FC = () => {
         <span className="font-bold underline decoration-1 underline-offset-8 text-[16pt]" style={{ unicodeBidi: 'embed' }}>الموضوع / {formData.subject}</span>
       </div>
       
-      {/* Updated Judge/Court Title Section - Back to Slash / */}
       <div className="mb-6 border-b border-black/10 pb-2" dir="rtl">
         <div className="font-bold text-right text-[15pt] mb-2" style={{ unicodeBidi: 'embed' }}>السيد/ {formData.judgeTitle}</div>
         <div className="font-bold text-center text-[15pt]">الموقر</div>
@@ -301,7 +300,6 @@ const App: React.FC = () => {
       
       <div className="text-center font-bold mb-4 text-[13pt]" dir="rtl">بعد التحية والاحترام</div>
       
-      {/* Body & Requests - Reduced spacing to look unified */}
       <div className="text-justify whitespace-pre-wrap text-[14pt] leading-[1.8] mb-4" style={{ unicodeBidi: 'isolate', direction: 'rtl' }}>
         {formData.body}
         {formData.requests && (
@@ -312,12 +310,11 @@ const App: React.FC = () => {
         )}
       </div>
       
-      {/* Unified Conclusion - mt-8 instead of mt-auto to avoid huge gaps */}
-      <div className="mt-8 border-t border-black/10 pt-4" dir="rtl">
+      <div className="mt-auto border-t border-black/10 pt-4" dir="rtl">
         <div className="text-center font-bold text-[14pt] mb-4" dir="rtl">ولعدالتكم فائق الاحترام والتقدير</div>
 
-        <div className="flex justify-between items-start mb-2 overflow-hidden" dir="rtl">
-          <div className="text-right space-y-0 flex-1 float-right" style={{ width: '60%' }} dir="rtl">
+        <div className="flex justify-between items-start mb-2 overflow-hidden" dir="rtl" style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
+          <div className="text-right space-y-0" style={{ width: '60%' }} dir="rtl">
               <p className="font-bold underline decoration-1 underline-offset-4 text-[12pt] mb-1" dir="rtl">الشهود:</p>
               {formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).length > 0 ? (
                 formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).map((w, idx) => (
@@ -328,7 +325,7 @@ const App: React.FC = () => {
               )}
           </div>
 
-          <div className="text-center w-48 pt-2 float-left" style={{ width: '40%' }} dir="rtl">
+          <div className="text-center w-48 pt-2" style={{ width: '40%' }} dir="rtl">
               <p className="font-bold text-[12pt] mb-1" dir="rtl">
                 {formData.userRole === 'محامي' ? 'عن مقدم العريضة' : 'مقدم العريضة'}
               </p>
@@ -336,7 +333,6 @@ const App: React.FC = () => {
               <div className="border-t border-black w-40 mx-auto opacity-50 mt-4"></div>
               <p className="text-[9pt] mt-1" dir="rtl">(التوقيع)</p>
           </div>
-          <div style={{ clear: 'both' }}></div>
         </div>
 
         <div className="pt-4 border-t border-black/10" dir="rtl">
@@ -349,6 +345,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* نسخة مخفية مخصصة حصراً للطباعة والتصدير لضمان الدقة */}
       <div className="fixed opacity-0 pointer-events-none -z-50" aria-hidden="true">
         <PrintableDocument id="printable-document-content" />
       </div>
@@ -660,18 +657,18 @@ const App: React.FC = () => {
               <p className="text-[11px] opacity-70 font-bold text-slate-800">محرر العرائض والطلبات</p>
             </div>
             
-            <div className="flex gap-6 items-center">
-              <a href={SOCIAL_LINKS.facebook} target="_blank" className="text-slate-400 hover:text-blue-600 transition-all hover:-translate-y-1">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+            <div className="flex gap-4 items-center">
+              <a href={SOCIAL_LINKS.facebook} target="_blank" className="group flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <svg className="w-6 h-6 text-[#1877F2] transition-transform group-hover:scale-125" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
               </a>
-              <a href={SOCIAL_LINKS.youtube} target="_blank" className="text-slate-400 hover:text-red-600 transition-all hover:-translate-y-1">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <a href={SOCIAL_LINKS.youtube} target="_blank" className="group flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <svg className="w-6 h-6 text-[#FF0000] transition-transform group-hover:scale-125" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
               </a>
-              <a href={SOCIAL_LINKS.tiktok} target="_blank" className="text-slate-400 hover:text-black transition-all hover:-translate-y-1">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31 0 2.59.32 3.72.93a6.52 6.52 0 0 1-1.6 4.3 6.51 6.51 0 0 1-4.3 2.02v3.01c2.14 0 4.14.77 5.7 2.07l.01.01c1.55 1.3 2.53 3.24 2.53 5.41 0 3.86-3.14 7-7 7s-7-3.14-7-7a6.97 6.97 0 0 1 1.76-4.6l.01-.01c1.3-1.55 3.24-2.53 5.41-2.53V7.02c-1.89 0-3.64-.74-4.95-1.95L7 4.02C5.7 2.72 5 1 5 0h3.01c0 1.1.45 2.09 1.17 2.81l.01.01c.71.72 1.7 1.17 2.81 1.17V.02zM12.5 14.5c-1.1 0-2.09.45-2.81 1.17l-.01.01c-.72.71-1.17 1.7-1.17 2.81 0 2.21 1.79 4 4 4s4-1.79 4-4c0-1.1-.45-2.09-1.17-2.81l-.01-.01c-.72-.72-1.71-1.17-2.82-1.17z"/></svg>
+              <a href={SOCIAL_LINKS.tiktok} target="_blank" className="group flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <svg className="w-6 h-6 text-black transition-transform group-hover:scale-125" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31 0 2.59.32 3.72.93a6.52 6.52 0 0 1-1.6 4.3 6.51 6.51 0 0 1-4.3 2.02v3.01c2.14 0 4.14.77 5.7 2.07l.01.01c1.55 1.3 2.53 3.24 2.53 5.41 0 3.86-3.14 7-7 7s-7-3.14-7-7a6.97 6.97 0 0 1 1.76-4.6l.01-.01c1.3-1.55 3.24-2.53 5.41-2.53V7.02c-1.89 0-3.64-.74-4.95-1.95L7 4.02C5.7 2.72 5 1 5 0h3.01c0 1.1.45 2.09 1.17 2.81l.01.01c.71.72 1.7 1.17 2.81 1.17V.02zM12.5 14.5c-1.1 0-2.09.45-2.81 1.17l-.01.01c-.72.71-1.17 1.7-1.17 2.81 0 2.21 1.79 4 4 4s4-1.79 4-4c0-1.1-.45-2.09-1.17-2.81l-.01-.01c-.72-.72-1.71-1.17-2.82-1.17z"/></svg>
               </a>
-              <a href={`mailto:${SOCIAL_LINKS.email}`} className="text-slate-400 hover:text-blue-500 transition-all hover:-translate-y-1">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 00-2 2z"/></svg>
+              <a href={`mailto:${SOCIAL_LINKS.email}`} className="group flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                <svg className="w-6 h-6 text-[#EA4335] transition-transform group-hover:scale-125" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 00-2 2z"/></svg>
               </a>
             </div>
 
@@ -683,7 +680,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="mt-12 flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-bold border-t border-gray-200 pt-8 uppercase tracking-tighter text-slate-500">
-            <span>إصدار V: 2.3.2 (Professional)</span>
+            <span>إصدار V: 2.3.6 (Professional)</span>
             <span className="md:mr-auto"></span>
             <span>&copy; 2026 MEELAWFIRM - جميع الحقوق محفوظة</span>
           </div>
