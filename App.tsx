@@ -6,7 +6,7 @@ import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, FOOTER_LINKS, SOCIAL_LI
 // --- Modern SVG Icons Components ---
 
 const GeneralIcon = () => (
-  <svg className="w-16 h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-12 h-12 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
     <polyline points="14 2 14 8 20 8" />
     <line x1="16" y1="13" x2="8" y2="13" />
@@ -16,7 +16,7 @@ const GeneralIcon = () => (
 );
 
 const CivilIcon = () => (
-  <svg className="w-16 h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-12 h-12 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 16s3-2 3-5a7 7 0 1 0-14 0c0 3 3 5 3 5" />
     <path d="M5 20h14" />
     <path d="M12 9v4" />
@@ -25,7 +25,7 @@ const CivilIcon = () => (
 );
 
 const CriminalIcon = () => (
-  <svg className="w-16 h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-12 h-12 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     <path d="M12 8v4" />
     <path d="M12 16h.01" />
@@ -33,7 +33,7 @@ const CriminalIcon = () => (
 );
 
 const PersonalIcon = () => (
-  <svg className="w-16 h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-12 h-12 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 21v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2" />
     <circle cx="9" cy="7" r="4" />
     <path d="M19 21v-2a4 4 0 0 0-3-3.87" />
@@ -175,8 +175,8 @@ const App: React.FC = () => {
           font-family: 'Calibri', 'Segoe UI', 'Arial', sans-serif; 
           direction: rtl; 
           text-align: right; 
-          padding: 1in;
-          line-height: 1.6;
+          padding: 0.5in;
+          line-height: 1.4;
           mso-bidi-font-family: 'Calibri';
           mso-ascii-font-family: 'Calibri';
           mso-hansi-font-family: 'Calibri';
@@ -186,11 +186,10 @@ const App: React.FC = () => {
         .font-bold { font-weight: bold; }
         .underline { text-decoration: underline; }
         .mb-1 { margin-bottom: 5pt; }
-        .mb-2 { margin-bottom: 15pt; }
+        .mb-2 { margin-bottom: 10pt; }
         .border-y { border-top: 1.5pt solid black; border-bottom: 1.5pt solid black; }
         .border-b { border-bottom: 1pt solid black; }
         .border-t { border-top: 1pt solid black; }
-        .py-0\\.5 { padding-top: 2pt; padding-bottom: 2pt; }
         p, div { 
           margin: 0; 
           padding: 0; 
@@ -200,15 +199,13 @@ const App: React.FC = () => {
         }
         .text-justify { text-align: justify; }
         .whitespace-pre-wrap { white-space: pre-wrap; }
-        .flex { display: block; width: 100%; }
-        .justify-between { display: block; width: 100%; overflow: hidden; }
-        .text-left { text-align: left; }
-        .mt-2 { margin-top: 20pt; }
-        .pt-1 { padding-top: 5pt; }
-        .pt-2 { padding-top: 15pt; }
-        .w-48 { width: 220pt; display: inline-block; vertical-align: top; }
-        .w-36 { width: 160pt; margin: 0 auto; }
-        .flex-1 { display: inline-block; width: 55%; vertical-align: top; }
+        .flex { display: flex; width: 100%; }
+        .justify-between { justify-content: space-between; }
+        .mt-2 { margin-top: 10pt; }
+        .pt-1 { padding-top: 3pt; }
+        .pt-2 { padding-top: 5pt; }
+        .w-48 { width: 180pt; }
+        .signature-line { border-top: 1pt solid black; width: 120pt; margin: 10pt auto 0; }
       </style>
     `;
 
@@ -268,7 +265,7 @@ const App: React.FC = () => {
       id={id} 
       lang="ar" 
       dir="rtl" 
-      className="bg-white w-full max-w-[210mm] pt-[30mm] p-[10mm] md:pt-[40mm] md:p-[15mm] shadow-none md:shadow-2xl petition-font text-[14pt] leading-[1.6] min-h-[297mm] relative text-black text-right flex flex-col box-border" 
+      className="bg-white w-full max-w-[210mm] p-[10mm] md:p-[15mm] shadow-none md:shadow-2xl petition-font text-[14pt] leading-[1.4] min-h-[297mm] relative text-black text-right flex flex-col box-border" 
       style={{ direction: 'rtl', unicodeBidi: 'isolate', textAlign: 'right' }}
     >
       {/* Header Layout */}
@@ -288,56 +285,59 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <div className="text-center mb-2 font-bold border-y border-black/20 py-1" dir="rtl" style={{ unicodeBidi: 'embed' }}>رقم الدعوى: {formData.caseNumber || '......... / .........'}</div>
-      <div className="text-center mb-4" dir="rtl">
-        <span className="font-bold underline decoration-1 underline-offset-8 text-[16pt]" style={{ unicodeBidi: 'embed' }}>الموضوع / {formData.subject}</span>
+      <div className="text-center mb-1 font-bold border-y border-black/20 py-1" dir="rtl" style={{ unicodeBidi: 'embed' }}>رقم الدعوى: {formData.caseNumber || '......... / .........'}</div>
+      <div className="text-center mb-2" dir="rtl">
+        <span className="font-bold underline decoration-1 underline-offset-4 text-[16pt]" style={{ unicodeBidi: 'embed' }}>الموضوع / {formData.subject}</span>
       </div>
       
-      <div className="mb-6 border-b border-black/10 pb-2" dir="rtl">
-        <div className="font-bold text-right text-[15pt] mb-2" style={{ unicodeBidi: 'embed' }}>السيد/ {formData.judgeTitle}</div>
+      <div className="mb-2 border-b border-black/10 pb-1" dir="rtl">
+        <div className="font-bold text-right text-[15pt] mb-1" style={{ unicodeBidi: 'embed' }}>السيد/ {formData.judgeTitle}</div>
         <div className="font-bold text-center text-[15pt]">الموقر</div>
       </div>
       
-      <div className="text-center font-bold mb-4 text-[13pt]" dir="rtl">بعد التحية والاحترام</div>
+      <div className="text-center font-bold mb-2 text-[13pt]" dir="rtl">بعد التحية والاحترام</div>
       
-      <div className="text-justify whitespace-pre-wrap text-[14pt] leading-[1.8] mb-4" style={{ unicodeBidi: 'isolate', direction: 'rtl' }}>
+      <div className="text-justify whitespace-pre-wrap text-[14pt] leading-[1.6] mb-2" style={{ unicodeBidi: 'isolate', direction: 'rtl' }}>
         {formData.body}
         {formData.requests && (
-          <div className="mt-4" dir="rtl">
-            <p className="font-bold underline decoration-1 underline-offset-4 mb-2" dir="rtl">الطلبات:</p>
-            <div className="pr-6" dir="rtl" style={{ unicodeBidi: 'embed' }}>{formData.requests}</div>
+          <div className="mt-2" dir="rtl">
+            <p className="font-bold underline decoration-1 underline-offset-2 mb-1" dir="rtl">الطلبات:</p>
+            <div className="pr-4" dir="rtl" style={{ unicodeBidi: 'embed' }}>{formData.requests}</div>
           </div>
         )}
       </div>
       
-      <div className="mt-auto border-t border-black/10 pt-4" dir="rtl">
-        <div className="text-center font-bold text-[14pt] mb-4" dir="rtl">ولعدالتكم فائق الاحترام والتقدير</div>
+      {/* Footer Area - No gap from body */}
+      <div className="border-t border-black/10 pt-2" dir="rtl">
+        <div className="text-center font-bold text-[14pt] mb-2" dir="rtl">ولعدالتكم وافر الاحترام والتقدير</div>
 
-        <div className="flex justify-between items-start mb-2 overflow-hidden" dir="rtl" style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
-          <div className="text-right space-y-0" style={{ width: '60%' }} dir="rtl">
+        <div className="flex justify-between items-start mb-2 overflow-hidden" dir="rtl" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          {/* Witnesses on the Right side (First in flex row for RTL) */}
+          <div className="text-right space-y-0" style={{ width: '55%' }} dir="rtl">
               <p className="font-bold underline decoration-1 underline-offset-4 text-[12pt] mb-1" dir="rtl">الشهود:</p>
               {formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).length > 0 ? (
                 formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).map((w, idx) => (
-                  <p key={idx} className="text-[12pt] leading-relaxed" dir="rtl" style={{ unicodeBidi: 'embed' }}>{toArabicDigits(idx + 1)}. {w.trim()}</p>
+                  <p key={idx} className="text-[12pt] leading-tight" dir="rtl" style={{ unicodeBidi: 'embed' }}>{toArabicDigits(idx + 1)}. {w.trim()}</p>
                 ))
               ) : (
                 <p className="text-[12pt]" dir="rtl">{toArabicDigits(1)}. ....................</p>
               )}
           </div>
 
-          <div className="text-center w-48 pt-2" style={{ width: '40%' }} dir="rtl">
+          {/* Petitioner on the Left side (Second in flex row for RTL) */}
+          <div className="text-center w-48 pt-1" style={{ width: '40%' }} dir="rtl">
               <p className="font-bold text-[12pt] mb-1" dir="rtl">
                 {formData.userRole === 'محامي' ? 'عن مقدم العريضة' : 'مقدم العريضة'}
               </p>
-              <p className="font-bold text-[12pt] mb-1 leading-tight truncate px-2" dir="rtl" style={{ unicodeBidi: 'embed' }}>{formData.applicantName || '....................'}</p>
-              <div className="border-t border-black w-40 mx-auto opacity-50 mt-4"></div>
+              <p className="font-bold text-[12pt] mb-0.5 leading-tight truncate px-2" dir="rtl" style={{ unicodeBidi: 'embed' }}>{formData.applicantName || '....................'}</p>
+              <div className="border-t border-black w-32 mx-auto opacity-50 mt-4"></div>
               <p className="text-[9pt] mt-1" dir="rtl">(التوقيع)</p>
           </div>
         </div>
 
-        <div className="pt-4 border-t border-black/10" dir="rtl">
+        <div className="pt-2 border-t border-black/10 text-right" dir="rtl">
           <p className="font-bold underline decoration-1 underline-offset-2 text-[11pt] mb-1" dir="rtl">المستندات المرفقة:</p>
-          <p className="text-[11pt] opacity-80 leading-relaxed" dir="rtl" style={{ unicodeBidi: 'embed' }}>{formData.documents || '................................'}</p>
+          <p className="text-[11pt] opacity-80 leading-tight" dir="rtl" style={{ unicodeBidi: 'embed' }}>{formData.documents || '................................'}</p>
         </div>
       </div>
     </div>
@@ -406,7 +406,7 @@ const App: React.FC = () => {
               )}
             </div>
 
-            {/* Main Interactive Grid */}
+            {/* Main Interactive Grid - Fix Personal Status Box wrapping */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-6xl mx-auto mb-16">
               {[
                 { id: Category.GENERAL, title: 'المحرر العام', icon: <GeneralIcon />, gradient: 'from-indigo-600 to-indigo-700' },
@@ -417,10 +417,12 @@ const App: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => handleCategoryClick(item.id as Category)}
-                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-6 md:p-10 rounded-[2.5rem] shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col items-center justify-center gap-4 text-center aspect-square`}
+                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-3 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col items-center justify-center gap-2 md:gap-4 text-center aspect-square w-full min-w-0`}
                 >
-                  <div className="drop-shadow-lg group-hover:scale-105 transition-transform">{item.icon}</div>
-                  <span className="text-lg md:text-2xl font-bold tracking-tight">{item.title}</span>
+                  <div className="drop-shadow-lg group-hover:scale-105 transition-transform shrink-0">{item.icon}</div>
+                  <span className="text-sm md:text-2xl font-bold tracking-tight whitespace-normal break-words leading-tight max-w-full px-1">
+                    {item.title}
+                  </span>
                 </button>
               ))}
             </div>
@@ -602,7 +604,7 @@ const App: React.FC = () => {
       {/* Preview Modal */}
       {showPreviewModal && (
         <div className="fixed inset-0 z-[100] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-300">
-          <div className="bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl flex flex-col max-h-[96vh] border border-gray-200">
+          <div className="bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl flex flex-col max-h-[96vh] border border-gray-200 overflow-hidden">
             <div className="p-8 flex justify-between items-center border-b no-print bg-slate-50 rounded-t-[3rem]">
               <h3 className="font-bold text-2xl text-slate-800 tracking-tight">معاينة المستند</h3>
               <div className="flex gap-3">
@@ -622,27 +624,6 @@ const App: React.FC = () => {
             </div>
             <div className="flex-1 overflow-y-auto p-4 md:p-12 bg-slate-100 flex justify-center" dir="rtl">
                 <PrintableDocument id="printable-document-modal" />
-            </div>
-            <div className="p-8 bg-white border-t grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 no-print rounded-b-[3rem]">
-               <button onClick={exportToPDF} className="group relative overflow-hidden flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-rose-600 to-pink-700 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-rose-200/50 transition-all shadow-xl hover:-translate-y-1 active:scale-95">
-                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <svg className="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path d="M9 9h6M9 13h6M9 17h6"/></svg>
-                  <span>تصدير PDF</span>
-               </button>
-               <button onClick={handlePrint} className="group relative overflow-hidden flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-emerald-600 to-teal-700 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-emerald-200/50 transition-all shadow-xl hover:-translate-y-1 active:scale-95">
-                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <svg className="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                  <span>الطباعة المباشرة</span>
-               </button>
-               <button onClick={exportToWord} className="group relative overflow-hidden flex flex-col items-center justify-center gap-1 bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-4 rounded-2xl font-bold text-lg hover:shadow-blue-200/50 transition-all shadow-xl hover:-translate-y-1 active:scale-95">
-                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <svg className="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                  <span>تصدير Word</span>
-               </button>
-               <button onClick={() => setShowPreviewModal(false)} className="group relative overflow-hidden flex flex-col items-center justify-center gap-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold text-lg hover:bg-slate-200 transition-all active:scale-95 shadow-lg">
-                  <svg className="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                  <span>إغلاق المعاينة</span>
-               </button>
             </div>
           </div>
         </div>
@@ -680,7 +661,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="mt-12 flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-bold border-t border-gray-200 pt-8 uppercase tracking-tighter text-slate-500">
-            <span>إصدار V: 2.3.6 (Professional)</span>
+            <span>إصدار V: 2.3.9 (Professional)</span>
             <span className="md:mr-auto"></span>
             <span>&copy; 2026 MEELAWFIRM - جميع الحقوق محفوظة</span>
           </div>
