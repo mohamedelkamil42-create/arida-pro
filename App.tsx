@@ -566,7 +566,7 @@ const App: React.FC = () => {
 
           <div className="mt-12 flex flex-wrap justify-center md:justify-start gap-4 text-[10px] font-bold border-t border-gray-200 pt-8 uppercase tracking-tighter text-slate-500">
             <span>إصدار V: 2.1.7 (PWA)</span>
-            <span className="md:mr-auto">البريد الإلكتروني: {SOCIAL_LINKS.email}</span>
+            <span className="md:mr-auto"></span>
             <span>&copy; 2026 MEELAWFIRM - جميع الحقوق محفوظة</span>
           </div>
         </div>
