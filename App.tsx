@@ -453,7 +453,7 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-100 flex justify-center">
-               <div id="printable-document" className="bg-white w-full max-w-[210mm] p-[10mm] md:p-[15mm] shadow-2xl petition-font text-[14pt] leading-[1.3] min-h-[297mm] relative text-black text-right flex flex-col" style={{ direction: 'rtl' }}>
+               <div id="printable-document" className="bg-white w-full max-w-[210mm] pt-[30mm] p-[10mm] md:pt-[40mm] md:p-[15mm] shadow-2xl petition-font text-[14pt] leading-[1.3] min-h-[297mm] relative text-black text-right flex flex-col" style={{ direction: 'rtl' }}>
                   
                   {/* Header Layout */}
                   <div className="text-center mb-0.5 font-bold">لدى {formData.policeStation || '....................'}</div>
