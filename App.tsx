@@ -306,7 +306,7 @@ const App: React.FC = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="flex flex-col">
-                  <label className={labelClass}>صفة مقدم الطلب</label>
+                  <label className={labelClass}>صفة مقدم الطلب أو العريضة</label>
                   <select className={inputClass} value={formData.userRole} onChange={e => setFormData({...formData, userRole: e.target.value as any})}>
                     <option>محامي</option>
                     <option>مقدم الطلب بنفسه</option>
@@ -409,7 +409,7 @@ const App: React.FC = () => {
 
                 {/* Petition Body */}
                 <div className="md:col-span-2 flex flex-col">
-                  <label className={labelClass}>وقائع العريضة (المتن)</label>
+                  <label className={labelClass}>وقائع العريضة أو الطلب</label>
                   <textarea rows={10} className={`${inputClass} petition-font text-2xl leading-relaxed shadow-inner`} placeholder="اكتب وقائع وأسباب العريضة هنا..." value={formData.body} onChange={e => setFormData({...formData, body: e.target.value})} />
                 </div>
 
@@ -518,7 +518,9 @@ const App: React.FC = () => {
 
                       {/* Signature Section */}
                       <div className="text-center w-48 pt-1">
-                          <p className="font-bold text-[11pt] mb-0.5">مقدم العريضة</p>
+                          <p className="font-bold text-[11pt] mb-0.5">
+                            {formData.userRole === 'محامي' ? 'عن مقدم العريضة' : 'مقدم العريضة'}
+                          </p>
                           <p className="font-bold text-[11pt] mb-0.5 leading-tight truncate px-2">{formData.applicantName || '....................'}</p>
                           <div className="border-t border-black w-36 mx-auto opacity-60"></div>
                           <p className="text-[8pt] mt-0.5">(التوقيع)</p>
