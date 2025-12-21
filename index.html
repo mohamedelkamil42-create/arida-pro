@@ -6,41 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEELAWFIRM - نظام تحرير العرائض</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'El Messiri', sans-serif;
             background-color: #f8fafc;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            unicode-bidi: isolate;
         }
         .petition-font {
-            font-family: 'Amiri', serif;
+            font-family: 'Calibri', 'Segoe UI', 'Candara', 'Optima', 'Arial', sans-serif;
         }
         @media print {
-            /* إخفاء كل شيء بشكل افتراضي */
-            body * {
-                visibility: hidden;
-                margin: 0;
+            html, body {
+                height: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: white !important;
+                direction: rtl !important;
             }
-            /* إظهار فقط عنصر المستند المخصص للطباعة */
-            #printable-document-content, #printable-document-content * {
-                visibility: visible !important;
+            #root {
+                display: none !important;
             }
             #printable-document-content {
+                visibility: visible !important;
+                display: block !important;
                 position: absolute !important;
                 left: 0 !important;
                 top: 0 !important;
                 width: 100% !important;
+                max-width: none !important;
                 height: auto !important;
-                background: white !important;
-                visibility: visible !important;
-                display: flex !important;
-                flex-direction: column !important;
-                padding: 0 !important;
+                padding: 2cm !important;
                 margin: 0 !important;
+                opacity: 1 !important;
                 box-shadow: none !important;
-                z-index: 999999 !important;
+                background-color: white !important;
+                direction: rtl !important;
+                text-align: right !important;
+                unicode-bidi: isolate !important;
+            }
+            #printable-document-content * {
+                visibility: visible !important;
             }
             .no-print {
                 display: none !important;
