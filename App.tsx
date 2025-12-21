@@ -1,7 +1,7 @@
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Category, PetitionModel, FormData as IFormData } from './types';
-import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, FOOTER_LINKS, SOCIAL_LINKS } from './constants';
+import React, { useState, useMemo } from 'react';
+import { Category, PetitionModel, FormData as IFormData } from './types.ts';
+import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, FOOTER_LINKS, SOCIAL_LINKS } from './constants.ts';
 
 const App: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
@@ -122,7 +122,7 @@ const App: React.FC = () => {
               <input
                 type="text"
                 placeholder="ابحث عن العريضة المطلوبة (مثال: قتل، طلاق، إخلاء)..."
-                className="w-full p-4 pr-12 rounded-full border-2 border-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm text-lg"
+                className="w-full p-4 pr-12 rounded-full border-2 border-blue-100 focus:border-blue-500 outline-none transition-all shadow-sm text-lg text-right"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
