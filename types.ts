@@ -17,7 +17,10 @@ export interface PetitionModel {
 
 export interface FormData {
   userRole: 'محامي' | 'مقدم الطلب بنفسه';
-  partyRole: 'شاكي' | 'مدعي';
+  partyRole: string;
+  customPartyRole: string;
+  secondPartyRole: string;
+  customSecondPartyRole: string;
   applicantName: string;
   applicantAddress: string;
   applicantPhone: string;
@@ -32,6 +35,7 @@ export interface FormData {
   caseNumber: string;
   subject: string;
   body: string;
+  requests: string;
   witnesses: string;
   documents: string;
   extraDetails: string;
