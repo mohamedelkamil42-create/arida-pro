@@ -131,25 +131,35 @@ const App: React.FC = () => {
     window.print();
   };
 
+  const handleExportPDF = () => {
+    // في متصفحات الويب والـ PWA، أسرع وأفضل طريقة لتصدير PDF هي عبر واجهة الطباعة واختيار "حفظ كـ PDF"
+    // نقوم بتوفير زر مخصص لهذا الغرض لسهولة الاستخدام
+    window.print();
+  };
+
   const exportToWord = () => {
-    const content = document.getElementById('printable-document')?.innerHTML;
-    if (!content) return;
+    const content = document.getElementById('printable-document-content')?.innerHTML;
+    if (!content) {
+      alert("حدث خطأ في استرداد محتوى المستند.");
+      return;
+    }
 
     const header = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head>
         <meta charset='utf-8'>
-        <title>Export Word</title>
+        <title>MEELAWFIRM Petition</title>
         <style>
+          @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
           body { font-family: 'Amiri', serif; direction: rtl; text-align: right; }
           .text-center { text-align: center; }
-          .text-right { text-align: right; }
-          .text-left { text-align: left; }
           .font-bold { font-weight: bold; }
           .underline { text-decoration: underline; }
-          .mb-1 { margin-bottom: 0.1rem; }
-          .mb-2 { margin-bottom: 0.2rem; }
-          .mb-4 { margin-bottom: 0.5rem; }
+          .mb-1 { margin-bottom: 5px; }
+          .mb-2 { margin-bottom: 10px; }
+          .border-y { border-top: 1px solid black; border-bottom: 1px solid black; }
+          .border-b { border-bottom: 1px solid black; }
+          .border-t { border-top: 1px solid black; }
         </style>
       </head>
       <body>
@@ -157,17 +167,15 @@ const App: React.FC = () => {
     const footer = "</body></html>";
     const sourceHTML = header + content + footer;
     
-    const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-    const fileDownload = document.createElement("a");
-    document.body.appendChild(fileDownload);
-    fileDownload.href = source;
-    fileDownload.download = `عريضة_${formData.applicantName || 'قانونية'}.doc`;
-    fileDownload.click();
-    document.body.removeChild(fileDownload);
-  };
-
-  const exportToPDF = () => {
-    window.print();
+    const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `عريضة_${formData.applicantName || 'قانونية'}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const scrollToTop = () => {
@@ -183,23 +191,94 @@ const App: React.FC = () => {
 
   const getEffectivePartyRole = (role: string, custom: string) => role === 'أخرى' ? custom : role;
 
+  const PrintableDocument = ({ id }: { id: string }) => (
+    <div id={id} className="bg-white w-full max-w-[210mm] pt-[30mm] p-[10mm] md:pt-[40mm] md:p-[15mm] shadow-none md:shadow-2xl petition-font text-[14pt] leading-[1.3] min-h-[297mm] relative text-black text-right flex flex-col" style={{ direction: 'rtl' }}>
+      {/* Header Layout */}
+      <div className="text-center mb-0.5 font-bold">لدى {formData.policeStation || '....................'}</div>
+      <div className="text-center mb-0.5 font-bold text-[11pt]">فيمابين</div>
+      <div className="text-center mb-0.5 font-bold text-[14pt]">
+        {formData.applicantName || '....................'} ({getEffectivePartyRole(formData.partyRole, formData.customPartyRole)}) - {formData.applicantAddress || '.......'} - {formData.applicantPhone || '.......'}
+      </div>
+      <div className="text-center mb-0.5 font-bold text-[11pt]">ضد</div>
+      <div className="text-center mb-0.5 font-bold text-[14pt]">
+        {formData.defendantName || '....................'} ({getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole)}) - {formData.defendantAddress || '.......'} - {formData.defendantPhone || '.......'}
+      </div>
+      
+      {formData.additionalStatement && (
+        <div className="text-center mb-0.5 font-bold text-[13pt] text-slate-900">
+          {formData.additionalStatement}
+        </div>
+      )}
+
+      <div className="text-center mb-1.5 font-bold border-y border-black/10 py-0.5">رقم الدعوى: {formData.caseNumber || '......... / .........'}</div>
+      <div className="text-center mb-2"><span className="font-bold underline decoration-1 underline-offset-4">الموضوع / {formData.subject}</span></div>
+      
+      <div className="flex justify-between mb-1.5 border-b border-black/5 pb-0.5">
+        <div className="font-bold">السيد / {formData.judgeTitle}</div>
+        <div className="font-bold text-left">الموقر,,,</div>
+      </div>
+      
+      <div className="text-center font-bold mb-1.5 text-[12pt]">بعد التحية والاحترام</div>
+      
+      {/* Body & Requests */}
+      <div className="text-justify whitespace-pre-wrap text-[13pt] leading-[1.4] mb-1">
+        {formData.body}
+        {formData.requests && (
+          <div className="mt-2">
+            <p className="font-bold underline mb-0.5">الطلبات:</p>
+            <div className="pr-4">{formData.requests}</div>
+          </div>
+        )}
+      </div>
+      
+      {/* Unified Conclusion, Witnesses and Signature Block */}
+      <div className="mt-2 border-t border-black/5 pt-2">
+        <div className="text-center font-bold text-[13pt] mb-2">ولعدالتكم فائق الاحترام والتقدير</div>
+
+        <div className="flex justify-between items-start mb-1">
+          <div className="text-right space-y-0 flex-1">
+              <p className="font-bold underline text-[11pt] mb-0.5">الشهود:</p>
+              {formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).length > 0 ? (
+                formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).map((w, idx) => (
+                  <p key={idx} className="text-[11pt] leading-tight">{idx + 1}. {w.trim()}</p>
+                ))
+              ) : (
+                <p className="text-[11pt]">1. ....................</p>
+              )}
+          </div>
+
+          <div className="text-center w-48 pt-1">
+              <p className="font-bold text-[11pt] mb-0.5">
+                {formData.userRole === 'محامي' ? 'عن مقدم العريضة' : 'مقدم العريضة'}
+              </p>
+              <p className="font-bold text-[11pt] mb-0.5 leading-tight truncate px-2">{formData.applicantName || '....................'}</p>
+              <div className="border-t border-black w-36 mx-auto opacity-60"></div>
+              <p className="text-[8pt] mt-0.5">(التوقيع)</p>
+          </div>
+        </div>
+
+        <div className="pt-2 border-t border-black/5">
+          <p className="font-bold underline text-[10pt] mb-0.5">المستندات المرفقة:</p>
+          <p className="text-[10pt] opacity-80 leading-tight">{formData.documents || '................................'}</p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      {/* Header */}
+      {/* نسخة مخفية لغرض الطباعة فقط */}
+      <div className="fixed opacity-0 pointer-events-none -z-50" aria-hidden="true">
+        <PrintableDocument id="printable-document-content" />
+      </div>
+
       <header className="bg-white/95 backdrop-blur-lg shadow-sm py-4 md:py-6 sticky top-0 z-50 px-4 no-print border-b border-gray-100">
         <div className="container mx-auto flex flex-col items-center">
-            <button 
-                onClick={goHome}
-                className="group flex flex-col items-center transition-all duration-500 transform"
-            >
-                <h1 className="text-3xl md:text-5xl font-bold text-center text-emerald-600 tracking-tighter group-hover:scale-105 transition-transform duration-500">
-                  MEELAWFIRM
-                </h1>
+            <button onClick={goHome} className="group flex flex-col items-center transition-all duration-500 transform">
+                <h1 className="text-3xl md:text-5xl font-bold text-center text-emerald-600 tracking-tighter group-hover:scale-105 transition-transform duration-500">MEELAWFIRM</h1>
                 <div className="flex items-center gap-2 mt-1 overflow-hidden">
                   <span className="h-[2px] w-4 bg-blue-600/30 group-hover:w-8 transition-all duration-500"></span>
-                  <span className="text-sm md:text-base font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent transform translate-y-0 group-hover:-translate-y-1 transition-transform duration-500">
-                    محرر العرائض والطلبات
-                  </span>
+                  <span className="text-sm md:text-base font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent transform translate-y-0 group-hover:-translate-y-1 transition-transform duration-500">محرر العرائض والطلبات</span>
                   <span className="h-[2px] w-4 bg-blue-600/30 group-hover:w-8 transition-all duration-500"></span>
                 </div>
             </button>
@@ -241,19 +320,15 @@ const App: React.FC = () => {
                       ))}
                     </div>
                   ) : (
-                    <button 
-                        onClick={() => handleModelSelect(PETITION_MODELS[0])}
-                        className="w-full text-center py-8 px-6 bg-blue-50 text-blue-700 font-bold hover:bg-blue-100 transition-all flex flex-col items-center gap-2"
-                    >
-                        <span className="text-2xl">📝</span>
-                        لم يتم العثور على نتيجة؟ استخدم العريضة العامة للتشكيل اليدوي
+                    <button onClick={() => handleModelSelect(PETITION_MODELS[0])} className="w-full text-center py-8 px-6 bg-blue-50 text-blue-700 font-bold hover:bg-blue-100 transition-all flex flex-col items-center gap-2">
+                        <span className="text-2xl">📝</span> لم يتم العثور على نتيجة؟ استخدم العريضة العامة للتشكيل اليدوي
                     </button>
                   )}
                 </div>
               )}
             </div>
 
-            {/* Main Interactive Grid (2x2 Mobile) */}
+            {/* Main Interactive Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-6xl mx-auto mb-16">
               {[
                 { id: Category.GENERAL, title: 'المحرر العام', icon: <GeneralIcon />, gradient: 'from-indigo-600 to-indigo-700' },
@@ -272,7 +347,6 @@ const App: React.FC = () => {
               ))}
             </div>
 
-            {/* Category Model List */}
             {activeCategory && activeCategory !== Category.GENERAL && (
               <div className="max-w-5xl mx-auto bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-gray-100 animate-in zoom-in-95 duration-500">
                 <div className="flex justify-between items-center mb-8 border-b pb-4">
@@ -283,11 +357,7 @@ const App: React.FC = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {PETITION_MODELS.filter(m => m.category === activeCategory).map(model => (
-                    <button
-                      key={model.id}
-                      onClick={() => handleModelSelect(model)}
-                      className="p-6 border border-gray-100 rounded-[1.5rem] hover:bg-blue-50/50 text-right transition-all group flex justify-between items-center"
-                    >
+                    <button key={model.id} onClick={() => handleModelSelect(model)} className="p-6 border border-gray-100 rounded-[1.5rem] hover:bg-blue-50/50 text-right transition-all group flex justify-between items-center">
                       <span className="font-bold text-gray-700 group-hover:text-blue-700">{model.title}</span>
                       <span className="text-blue-200">←</span>
                     </button>
@@ -315,11 +385,9 @@ const App: React.FC = () => {
 
                 <div className="hidden md:block"></div>
 
-                {/* Party Data */}
                 <div className="md:col-span-2 bg-blue-50/30 p-6 md:p-8 rounded-[2rem] border-2 border-blue-100 space-y-6">
                   <h3 className="font-bold text-blue-800 border-b-2 border-blue-200 pb-2 flex items-center gap-2 text-xl">
-                    <span className="w-2 h-8 bg-blue-600 rounded-full"></span>
-                    بيانات الطرف الأول (مقدم العريضة)
+                    <span className="w-2 h-8 bg-blue-600 rounded-full"></span> بيانات الطرف الأول
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="flex flex-col">
@@ -330,29 +398,28 @@ const App: React.FC = () => {
                     </div>
                     {formData.partyRole === 'أخرى' && (
                       <div className="flex flex-col">
-                        <label className={labelClass}>اكتب الصفة المخصصة</label>
-                        <input type="text" placeholder="مثلاً: مستأنف..." className={inputClass} value={formData.customPartyRole} onChange={e => setFormData({...formData, customPartyRole: e.target.value})} />
+                        <label className={labelClass}>الصفة المخصصة</label>
+                        <input type="text" className={inputClass} value={formData.customPartyRole} onChange={e => setFormData({...formData, customPartyRole: e.target.value})} />
                       </div>
                     )}
                     <div className="flex flex-col">
                       <label className={labelClass}>الاسم الكامل</label>
-                      <input type="text" placeholder="الاسم الرباعي" className={inputClass} value={formData.applicantName} onChange={e => setFormData({...formData, applicantName: e.target.value})} />
+                      <input type="text" className={inputClass} value={formData.applicantName} onChange={e => setFormData({...formData, applicantName: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
                       <label className={labelClass}>العنوان</label>
-                      <input type="text" placeholder="مكان الإقامة" className={inputClass} value={formData.applicantAddress} onChange={e => setFormData({...formData, applicantAddress: e.target.value})} />
+                      <input type="text" className={inputClass} value={formData.applicantAddress} onChange={e => setFormData({...formData, applicantAddress: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
                       <label className={labelClass}>رقم الهاتف</label>
-                      <input type="text" placeholder="0XXXXXXXXX" className={inputClass} dir="ltr" value={formData.applicantPhone} onChange={e => setFormData({...formData, applicantPhone: e.target.value})} />
+                      <input type="text" className={inputClass} dir="ltr" value={formData.applicantPhone} onChange={e => setFormData({...formData, applicantPhone: e.target.value})} />
                     </div>
                   </div>
                 </div>
 
                 <div className="md:col-span-2 bg-red-50/30 p-6 md:p-8 rounded-[2rem] border-2 border-red-100 space-y-6">
                   <h3 className="font-bold text-red-800 border-b-2 border-red-200 pb-2 flex items-center gap-2 text-xl">
-                    <span className="w-2 h-8 bg-red-600 rounded-full"></span>
-                    بيانات الطرف الثاني (الخصم/المقدم ضده)
+                    <span className="w-2 h-8 bg-red-600 rounded-full"></span> بيانات الطرف الثاني
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="flex flex-col">
@@ -363,29 +430,28 @@ const App: React.FC = () => {
                     </div>
                     {formData.secondPartyRole === 'أخرى' && (
                       <div className="flex flex-col">
-                        <label className={labelClass}>اكتب الصفة المخصصة</label>
-                        <input type="text" placeholder="مثلاً: خصم..." className={inputClass} value={formData.customSecondPartyRole} onChange={e => setFormData({...formData, customSecondPartyRole: e.target.value})} />
+                        <label className={labelClass}>الصفة المخصصة</label>
+                        <input type="text" className={inputClass} value={formData.customSecondPartyRole} onChange={e => setFormData({...formData, customSecondPartyRole: e.target.value})} />
                       </div>
                     )}
                     <div className="flex flex-col">
                       <label className={labelClass}>اسم الخصم</label>
-                      <input type="text" placeholder="اسم الطرف الثاني" className={inputClass} value={formData.defendantName} onChange={e => setFormData({...formData, defendantName: e.target.value})} />
+                      <input type="text" className={inputClass} value={formData.defendantName} onChange={e => setFormData({...formData, defendantName: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
                       <label className={labelClass}>عنوان الخصم</label>
-                      <input type="text" placeholder="عنوان الطرف الثاني" className={inputClass} value={formData.defendantAddress} onChange={e => setFormData({...formData, defendantAddress: e.target.value})} />
+                      <input type="text" className={inputClass} value={formData.defendantAddress} onChange={e => setFormData({...formData, defendantAddress: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
                       <label className={labelClass}>هاتف الخصم</label>
-                      <input type="text" placeholder="رقم التواصل" className={inputClass} dir="ltr" value={formData.defendantPhone} onChange={e => setFormData({...formData, defendantPhone: e.target.value})} />
+                      <input type="text" className={inputClass} dir="ltr" value={formData.defendantPhone} onChange={e => setFormData({...formData, defendantPhone: e.target.value})} />
                     </div>
                   </div>
                 </div>
 
-                {/* Investigating / Court Details */}
                 <div className="flex flex-col">
                   <label className={labelClass}>الجهة (لدى...)</label>
-                  <input type="text" className={inputClass} value={formData.policeStation} onChange={e => setFormData({...formData, policeStation: e.target.value})} placeholder="نيابة... / محكمة..." />
+                  <input type="text" className={inputClass} value={formData.policeStation} onChange={e => setFormData({...formData, policeStation: e.target.value})} />
                 </div>
                 <div className="flex flex-col">
                   <label className={labelClass}>المسؤول (السيد / ...)</label>
@@ -395,50 +461,56 @@ const App: React.FC = () => {
                   </select>
                 </div>
                 <div className="flex flex-col">
-                  <label className={labelClass}>بيانات إضافية (تظهر في منتصف العريضة - اختياري)</label>
-                  <input type="text" className={inputClass} placeholder="أي بيان إضافي ترغب بوضعه هنا..." value={formData.additionalStatement} onChange={e => setFormData({...formData, additionalStatement: e.target.value})} />
+                  <label className={labelClass}>بيانات إضافية (اختياري)</label>
+                  <input type="text" className={inputClass} value={formData.additionalStatement} onChange={e => setFormData({...formData, additionalStatement: e.target.value})} />
                 </div>
                 <div className="flex flex-col">
                   <label className={labelClass}>رقم الدعوى</label>
-                  <input type="text" className={inputClass} placeholder="ق م / ... / 2024" value={formData.caseNumber} onChange={e => setFormData({...formData, caseNumber: e.target.value})} />
+                  <input type="text" className={inputClass} value={formData.caseNumber} onChange={e => setFormData({...formData, caseNumber: e.target.value})} />
                 </div>
                 <div className="flex flex-col">
                     <label className={labelClass}>الموضوع</label>
                     <input type="text" className={`${inputClass} font-bold`} value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} />
                 </div>
 
-                {/* Petition Body */}
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>وقائع العريضة أو الطلب</label>
-                  <textarea rows={10} className={`${inputClass} petition-font text-2xl leading-relaxed shadow-inner`} placeholder="اكتب وقائع وأسباب العريضة هنا..." value={formData.body} onChange={e => setFormData({...formData, body: e.target.value})} />
+                  <textarea rows={10} className={`${inputClass} petition-font text-2xl leading-relaxed shadow-inner`} value={formData.body} onChange={e => setFormData({...formData, body: e.target.value})} />
                 </div>
 
-                {/* Requests Field */}
                 <div className="md:col-span-2 flex flex-col">
                   <label className={`${labelClass} text-blue-700`}>الطلبات الختامية</label>
-                  <textarea rows={4} className={`${inputClass} petition-font text-2xl border-blue-300 shadow-inner`} placeholder="ماذا تطلب من المحكمة/النيابة في نهاية العريضة؟" value={formData.requests} onChange={e => setFormData({...formData, requests: e.target.value})} />
+                  <textarea rows={4} className={`${inputClass} petition-font text-2xl border-blue-300 shadow-inner`} value={formData.requests} onChange={e => setFormData({...formData, requests: e.target.value})} />
                 </div>
 
                 <div className="md:col-span-2 flex flex-col">
-                  <label className={labelClass}>الشهود (اكتب كل شاهد في سطر منفصل)</label>
-                  <textarea rows={3} className={inputClass} value={formData.witnesses} onChange={e => setFormData({...formData, witnesses: e.target.value})} placeholder="1. الشاهد الأول&#10;2. الشاهد الثاني..." />
+                  <label className={labelClass}>الشهود</label>
+                  <textarea rows={3} className={inputClass} value={formData.witnesses} onChange={e => setFormData({...formData, witnesses: e.target.value})} />
                 </div>
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>المستندات المرفقة</label>
-                  <input type="text" className={inputClass} value={formData.documents} onChange={e => setFormData({...formData, documents: e.target.value})} placeholder="عقود، إفادات، صور..." />
+                  <input type="text" className={inputClass} value={formData.documents} onChange={e => setFormData({...formData, documents: e.target.value})} />
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4 mt-12 bg-slate-50 p-6 rounded-[2rem] border border-gray-100">
-                <button onClick={() => setShowPreviewModal(true)} className="flex-1 bg-slate-900 text-white py-5 rounded-2xl font-bold text-lg hover:bg-black transition-all shadow-lg">👁️ معاينة المستند</button>
-                <button onClick={exportToWord} className="flex-1 bg-blue-500 text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-600 transition-all shadow-lg flex items-center justify-center gap-2">
-                    تصدير Word
+              {/* Action Buttons Improved Aesthetics */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12 bg-slate-50 p-6 rounded-[2rem] border border-gray-100">
+                <button onClick={() => setShowPreviewModal(true)} className="flex items-center justify-center gap-2 bg-slate-900 text-white py-5 rounded-2xl font-bold text-lg hover:bg-black transition-all shadow-lg active:scale-95">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                  معاينة
                 </button>
-                <button onClick={exportToPDF} className="flex-1 bg-rose-500 text-white py-5 rounded-2xl font-bold text-lg hover:bg-rose-600 transition-all shadow-lg flex items-center justify-center gap-2">
-                    تصدير PDF
+                <button onClick={exportToWord} className="flex items-center justify-center gap-2 bg-blue-600 text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg active:scale-95">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  تصدير Word
                 </button>
-                <button onClick={handlePrint} className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg">🖨️ طباعة</button>
+                <button onClick={handleExportPDF} className="flex items-center justify-center gap-2 bg-rose-600 text-white py-5 rounded-2xl font-bold text-lg hover:bg-rose-700 transition-all shadow-lg active:scale-95">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 9h1.5m1.5 0h1.5M9 13h6M9 17h6"/></svg>
+                  تصدير PDF
+                </button>
+                <button onClick={handlePrint} className="flex items-center justify-center gap-2 bg-emerald-600 text-white py-5 rounded-2xl font-bold text-lg hover:bg-emerald-700 transition-all shadow-lg active:scale-95">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                  طباعة مباشرة
+                </button>
               </div>
             </div>
           </div>
@@ -449,95 +521,34 @@ const App: React.FC = () => {
       {showPreviewModal && (
         <div className="fixed inset-0 z-[100] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto animate-in fade-in duration-300">
           <div className="bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl flex flex-col max-h-[96vh] border border-gray-200">
-            <div className="p-8 flex justify-between items-center border-b no-print">
-              <h3 className="font-bold text-2xl text-slate-800 tracking-tight">تنسيق المستند النهائي A4</h3>
-              <div className="flex gap-4">
-                <button onClick={exportToWord} className="bg-blue-50 text-blue-600 px-4 py-2 rounded-xl font-bold hover:bg-blue-100 transition-all text-sm">Word</button>
-                <button onClick={exportToPDF} className="bg-rose-50 text-rose-600 px-4 py-2 rounded-xl font-bold hover:bg-rose-100 transition-all text-sm">PDF</button>
-                <button onClick={() => setShowPreviewModal(false)} className="bg-slate-50 text-slate-400 w-10 h-10 rounded-full flex items-center justify-center hover:bg-red-50 transition-all text-xl">✕</button>
+            <div className="p-8 flex justify-between items-center border-b no-print bg-slate-50 rounded-t-[3rem]">
+              <h3 className="font-bold text-2xl text-slate-800 tracking-tight">معاينة المستند</h3>
+              <div className="flex gap-2">
+                <button onClick={exportToWord} title="تصدير Word" className="p-3 bg-white border border-gray-200 text-blue-600 rounded-xl hover:bg-blue-50 transition-all active:scale-90">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </button>
+                <button onClick={handleExportPDF} title="تصدير PDF" className="p-3 bg-white border border-gray-200 text-rose-600 rounded-xl hover:bg-rose-50 transition-all active:scale-90">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 9h1.5m1.5 0h1.5M9 13h6M9 17h6"/></svg>
+                </button>
+                <button onClick={handlePrint} title="طباعة" className="p-3 bg-white border border-gray-200 text-emerald-600 rounded-xl hover:bg-emerald-50 transition-all active:scale-90">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                </button>
+                <button onClick={() => setShowPreviewModal(false)} className="p-3 bg-slate-200 text-slate-600 rounded-xl hover:bg-red-100 hover:text-red-600 transition-all active:scale-90">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-100 flex justify-center">
-               <div id="printable-document" className="bg-white w-full max-w-[210mm] pt-[30mm] p-[10mm] md:pt-[40mm] md:p-[15mm] shadow-2xl petition-font text-[14pt] leading-[1.3] min-h-[297mm] relative text-black text-right flex flex-col" style={{ direction: 'rtl' }}>
-                  
-                  {/* Header Layout */}
-                  <div className="text-center mb-0.5 font-bold">لدى {formData.policeStation || '....................'}</div>
-                  <div className="text-center mb-0.5 font-bold text-[11pt]">فيمابين</div>
-                  <div className="text-center mb-0.5 font-bold text-[14pt]">
-                    {formData.applicantName || '....................'} ({getEffectivePartyRole(formData.partyRole, formData.customPartyRole)}) - {formData.applicantAddress || '.......'} - {formData.applicantPhone || '.......'}
-                  </div>
-                  <div className="text-center mb-0.5 font-bold text-[11pt]">ضد</div>
-                  <div className="text-center mb-0.5 font-bold text-[14pt]">
-                    {formData.defendantName || '....................'} ({getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole)}) - {formData.defendantAddress || '.......'} - {formData.defendantPhone || '.......'}
-                  </div>
-                  
-                  {/* Optional Additional Statement Field */}
-                  {formData.additionalStatement && (
-                    <div className="text-center mb-0.5 font-bold text-[13pt] text-slate-900">
-                      {formData.additionalStatement}
-                    </div>
-                  )}
-
-                  <div className="text-center mb-1.5 font-bold border-y border-black/10 py-0.5">رقم الدعوى: {formData.caseNumber || '......... / .........'}</div>
-                  <div className="text-center mb-2"><span className="font-bold underline decoration-1 underline-offset-4">الموضوع / {formData.subject}</span></div>
-                  
-                  <div className="flex justify-between mb-1.5 border-b border-black/5 pb-0.5">
-                    <div className="font-bold">السيد / {formData.judgeTitle}</div>
-                    <div className="font-bold text-left">الموقر,,,</div>
-                  </div>
-                  
-                  <div className="text-center font-bold mb-1.5 text-[12pt]">بعد التحية والاحترام</div>
-                  
-                  {/* Body & Requests */}
-                  <div className="text-justify whitespace-pre-wrap text-[13pt] leading-[1.4] mb-1">
-                    {formData.body}
-                    {formData.requests && (
-                      <div className="mt-2">
-                        <p className="font-bold underline mb-0.5">الطلبات:</p>
-                        <div className="pr-4">{formData.requests}</div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Unified Conclusion, Witnesses and Signature Block */}
-                  <div className="mt-2 border-t border-black/5 pt-2">
-                    <div className="text-center font-bold text-[13pt] mb-2">ولعدالتكم فائق الاحترام والتقدير</div>
-
-                    <div className="flex justify-between items-start mb-1">
-                      {/* Witnesses Section */}
-                      <div className="text-right space-y-0 flex-1">
-                          <p className="font-bold underline text-[11pt] mb-0.5">الشهود:</p>
-                          {formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).length > 0 ? (
-                            formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).map((w, idx) => (
-                              <p key={idx} className="text-[11pt] leading-tight">{idx + 1}. {w.trim()}</p>
-                            ))
-                          ) : (
-                            <p className="text-[11pt]">1. ....................</p>
-                          )}
-                      </div>
-
-                      {/* Signature Section */}
-                      <div className="text-center w-48 pt-1">
-                          <p className="font-bold text-[11pt] mb-0.5">
-                            {formData.userRole === 'محامي' ? 'عن مقدم العريضة' : 'مقدم العريضة'}
-                          </p>
-                          <p className="font-bold text-[11pt] mb-0.5 leading-tight truncate px-2">{formData.applicantName || '....................'}</p>
-                          <div className="border-t border-black w-36 mx-auto opacity-60"></div>
-                          <p className="text-[8pt] mt-0.5">(التوقيع)</p>
-                      </div>
-                    </div>
-
-                    {/* Documents moved immediately below Witnesses and Signature */}
-                    <div className="pt-2 border-t border-black/5">
-                      <p className="font-bold underline text-[10pt] mb-0.5">المستندات المرفقة:</p>
-                      <p className="text-[10pt] opacity-80 leading-tight">{formData.documents || '................................'}</p>
-                    </div>
-                  </div>
-               </div>
+                <PrintableDocument id="printable-document-modal" />
             </div>
-            <div className="p-8 bg-white border-t flex gap-6 no-print">
-               <button onClick={handlePrint} className="flex-1 bg-blue-600 text-white py-4 rounded-[1.5rem] font-bold text-xl hover:bg-blue-700 shadow-xl">تأكيد وطباعة</button>
-               <button onClick={() => setShowPreviewModal(false)} className="flex-1 bg-slate-100 text-slate-600 py-4 rounded-[1.5rem] font-bold text-xl hover:bg-slate-200">العودة للتعديل</button>
+            <div className="p-8 bg-white border-t grid grid-cols-2 gap-4 no-print rounded-b-[3rem]">
+               <button onClick={handlePrint} className="flex items-center justify-center gap-2 bg-emerald-600 text-white py-4 rounded-[1.5rem] font-bold text-xl hover:bg-emerald-700 shadow-xl transition-all active:scale-95">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                  طباعة نهائية
+               </button>
+               <button onClick={() => setShowPreviewModal(false)} className="flex items-center justify-center gap-2 bg-slate-100 text-slate-600 py-4 rounded-[1.5rem] font-bold text-xl hover:bg-slate-200 transition-all active:scale-95">
+                  رجوع للتعديل
+               </button>
             </div>
           </div>
         </div>
@@ -548,12 +559,7 @@ const App: React.FC = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex flex-col items-center md:items-start gap-2">
-              <button 
-                onClick={scrollToTop}
-                className="text-2xl font-bold text-emerald-600 tracking-tighter hover:text-blue-600 transition-all hover:scale-105"
-              >
-                MEELAWFIRM
-              </button>
+              <button onClick={scrollToTop} className="text-2xl font-bold text-emerald-600 tracking-tighter hover:text-blue-600 transition-all hover:scale-105">MEELAWFIRM</button>
               <p className="text-[11px] opacity-70 font-bold text-slate-800">محرر العرائض والطلبات</p>
             </div>
             
