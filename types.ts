@@ -17,6 +17,7 @@ export interface PetitionModel {
 
 export interface FormData {
   userRole: 'محامي' | 'مقدم الطلب بنفسه';
+  lawyerName: string;
   partyRole: string;
   customPartyRole: string;
   secondPartyRole: string;
