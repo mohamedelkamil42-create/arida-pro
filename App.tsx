@@ -3,6 +3,13 @@ import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Category, PetitionModel, FormData as IFormData } from './types.ts';
 import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, FOOTER_LINKS, SOCIAL_LINKS } from './constants.ts';
 
+// تعريف واجهة المسودات المحفوظة
+interface SavedPetition {
+  id: string;
+  timestamp: number;
+  data: IFormData;
+}
+
 // --- Modern SVG Icons Components ---
 
 const GeneralIcon = () => (
@@ -41,7 +48,65 @@ const PersonalIcon = () => (
   </svg>
 );
 
-// --- Social Icons Components (Small & Circular) ---
+// --- Action Icons for Buttons ---
+
+const PreviewIcon = () => (
+  <svg className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+    <circle cx="12" cy="12" r="3" />
+  </svg>
+);
+
+const WordIcon = () => (
+  <svg className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <path d="M9 13v4" />
+    <path d="M12 13v4" />
+    <path d="M15 13v4" />
+  </svg>
+);
+
+const PDFIcon = () => (
+  <svg className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <polyline points="14 2 14 8 20 8" />
+    <path d="M12 18v-6" />
+    <path d="m9 15 3 3 3-3" />
+  </svg>
+);
+
+const PrintIcon = () => (
+  <svg className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="6 9 6 2 18 2 18 9" />
+    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+    <rect x="6" y="14" width="12" height="8" />
+  </svg>
+);
+
+const SaveIcon = () => (
+  <svg className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+    <polyline points="17 21 17 13 7 13 7 21" />
+    <polyline points="7 3 7 8 15 8" />
+  </svg>
+);
+
+const TrashIcon = () => (
+  <svg className="w-5 h-5 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="3 6 5 6 21 6" />
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </svg>
+);
+
+const HistoryIcon = () => (
+  <svg className="w-6 h-6 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);
+
+// --- Social Icons ---
 
 const YouTubeIcon = () => (
   <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -77,6 +142,8 @@ const App: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [triggerPulse, setTriggerPulse] = useState(0);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [savedPetitions, setSavedPetitions] = useState<SavedPetition[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
   const categoryListRef = useRef<HTMLDivElement>(null);
 
@@ -108,6 +175,23 @@ const App: React.FC = () => {
     extraDetails: '',
     additionalStatement: ''
   });
+
+  // Load saved petitions on component mount
+  useEffect(() => {
+    const stored = localStorage.getItem('meelawfirm_saved_v1');
+    if (stored) {
+      try {
+        setSavedPetitions(JSON.parse(stored));
+      } catch (e) {
+        console.error("Failed to parse saved petitions", e);
+      }
+    }
+  }, []);
+
+  // Sync saved petitions to localStorage
+  useEffect(() => {
+    localStorage.setItem('meelawfirm_saved_v1', JSON.stringify(savedPetitions));
+  }, [savedPetitions]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -169,6 +253,30 @@ const App: React.FC = () => {
     setIsSearchFocused(false);
     setSearchQuery('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSaveToLibrary = () => {
+    const newPetition: SavedPetition = {
+      id: Date.now().toString(),
+      timestamp: Date.now(),
+      data: { ...formData }
+    };
+    setSavedPetitions(prev => [newPetition, ...prev]);
+    alert("تم حفظ العريضة بنجاح في مكتبتك.");
+  };
+
+  const handleLoadSaved = (petition: SavedPetition) => {
+    setFormData(petition.data);
+    setIsEditing(true);
+    setIsHistoryOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleDeleteSaved = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (confirm("هل تريد بالتأكيد حذف هذه العريضة؟")) {
+      setSavedPetitions(prev => prev.filter(p => p.id !== id));
+    }
   };
 
   const handlePrint = () => {
@@ -402,6 +510,53 @@ const App: React.FC = () => {
               ))}
             </div>
 
+            {/* --- Saved Petitions Dropdown Section --- */}
+            <div className="max-w-6xl mx-auto w-full no-print mt-2">
+               <button 
+                onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+                className="w-full bg-slate-50 hover:bg-slate-100 p-4 md:p-6 rounded-[1.5rem] border-2 border-slate-200 flex items-center justify-between transition-all group"
+               >
+                  <div className="flex items-center">
+                    <HistoryIcon />
+                    <span className="text-lg md:text-xl font-bold text-slate-800">عرائضي المحفوظة ({savedPetitions.length})</span>
+                  </div>
+                  <span className={`text-2xl transition-transform duration-300 ${isHistoryOpen ? 'rotate-180' : ''}`}>▼</span>
+               </button>
+
+               {isHistoryOpen && (
+                 <div className="bg-white border-x-2 border-b-2 border-slate-100 rounded-b-[1.5rem] p-4 md:p-8 shadow-inner animate-in slide-in-from-top-4 duration-300">
+                    {savedPetitions.length === 0 ? (
+                      <p className="text-center text-slate-400 font-bold py-8">لا توجد مسودات محفوظة حتى الآن.</p>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {savedPetitions.map(petition => (
+                          <div 
+                            key={petition.id} 
+                            onClick={() => handleLoadSaved(petition)}
+                            className="p-5 border-2 border-slate-50 rounded-2xl hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all group relative flex flex-col justify-between h-40"
+                          >
+                             <div>
+                               <h3 className="font-bold text-slate-800 group-hover:text-blue-700 leading-snug mb-1 line-clamp-2">{petition.data.subject || 'بدون عنوان'}</h3>
+                               <p className="text-[10px] text-slate-400 font-bold">{new Date(petition.timestamp).toLocaleString('ar-EG')}</p>
+                             </div>
+                             <div className="flex justify-between items-center mt-4">
+                               <span className="text-[9px] bg-slate-100 px-2 py-1 rounded-full font-bold text-slate-500 uppercase">{petition.data.partyRole}</span>
+                               <button 
+                                onClick={(e) => handleDeleteSaved(e, petition.id)}
+                                className="p-2 hover:bg-red-50 rounded-full transition-all group/trash"
+                                title="حذف"
+                               >
+                                <TrashIcon />
+                               </button>
+                             </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                 </div>
+               )}
+            </div>
+
             {activeCategory && activeCategory !== Category.GENERAL && (
               <div ref={categoryListRef} className="max-w-5xl mx-auto w-full bg-white rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-10 shadow-2xl border border-blue-50 no-print animate-in slide-in-from-bottom-8 fade-in duration-500">
                 <div className="flex justify-between items-center mb-6 md:mb-8 border-b border-gray-100 pb-4 md:pb-6">
@@ -425,9 +580,14 @@ const App: React.FC = () => {
         ) : (
           <div className="max-w-6xl mx-auto space-y-6 md:space-y-8 no-print animate-in fade-in duration-500">
             <div className="bg-white p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-xl border-t-8 border-t-blue-600">
-              <button onClick={goHome} className="mb-6 flex items-center gap-2 text-blue-600 font-bold hover:translate-x-1 transition-transform">
-                <span>&rarr;</span> <span>العودة للرئيسية</span>
-              </button>
+              <div className="flex justify-between items-center mb-6">
+                <button onClick={goHome} className="flex items-center gap-2 text-blue-600 font-bold hover:translate-x-1 transition-transform">
+                  <span>&rarr;</span> <span>العودة للرئيسية</span>
+                </button>
+                <button onClick={handleSaveToLibrary} className="flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full font-bold hover:bg-emerald-600 hover:text-white transition-all border border-emerald-100">
+                  <SaveIcon /> <span>حفظ في مكتبتي</span>
+                </button>
+              </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col">
@@ -517,10 +677,18 @@ const App: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
-                <button onClick={() => setShowPreviewModal(true)} className="p-4 md:p-5 bg-slate-800 text-white rounded-2xl font-bold hover:bg-slate-700 shadow-lg active:scale-95 transition-all">معاينة المستند</button>
-                <button onClick={exportToWord} className="p-4 md:p-5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-500 shadow-lg active:scale-95 transition-all">تصدير Word</button>
-                <button onClick={exportToPDF} className="p-4 md:p-5 bg-rose-600 text-white rounded-2xl font-bold hover:bg-rose-500 shadow-lg active:scale-95 transition-all">حفظ PDF</button>
-                <button onClick={handlePrint} className="p-4 md:p-5 bg-blue-700 text-white rounded-2xl font-bold hover:bg-blue-800 shadow-lg active:scale-95 transition-all">طباعة فورية</button>
+                <button onClick={() => setShowPreviewModal(true)} className="p-4 md:p-5 bg-slate-800 text-white rounded-2xl font-bold hover:bg-slate-700 shadow-lg active:scale-95 transition-all flex items-center justify-center">
+                  <PreviewIcon /> معاينة المستند
+                </button>
+                <button onClick={exportToWord} className="p-4 md:p-5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-500 shadow-lg active:scale-95 transition-all flex items-center justify-center">
+                  <WordIcon /> تصدير Word
+                </button>
+                <button onClick={exportToPDF} className="p-4 md:p-5 bg-rose-600 text-white rounded-2xl font-bold hover:bg-rose-500 shadow-lg active:scale-95 transition-all flex items-center justify-center">
+                  <PDFIcon /> حفظ PDF
+                </button>
+                <button onClick={handlePrint} className="p-4 md:p-5 bg-blue-700 text-white rounded-2xl font-bold hover:bg-blue-800 shadow-lg active:scale-95 transition-all flex items-center justify-center">
+                  <PrintIcon /> طباعة فورية
+                </button>
               </div>
             </div>
           </div>

@@ -43,3 +43,9 @@ export interface FormData {
   extraDetails: string;
   additionalStatement: string;
 }
+
+export interface SavedPetition {
+  id: string;
+  timestamp: number;
+  data: FormData;
+}
