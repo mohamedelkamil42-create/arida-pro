@@ -13,7 +13,7 @@
     <style>
         body {
             font-family: 'El Messiri', sans-serif;
-            background-color: #f8fafc;
+            background-color: #ffffff;
             margin: 0;
             padding: 0;
             -webkit-print-color-adjust: exact !important;
@@ -23,6 +23,28 @@
         /* الخط القانوني الموحد */
         .petition-font {
             font-family: 'Traditional Arabic', 'Times New Roman', 'Arial', sans-serif;
+        }
+
+        /* تأثير النص التفاعلي */
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .interactive-legal-text {
+            background: linear-gradient(270deg, #1d4ed8, #2563eb, #059669, #7c3aed, #1d4ed8);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            transition: all 0.5s ease;
+        }
+
+        .interactive-legal-text:hover {
+            animation: gradient-shift 3s ease infinite;
+            transform: scale(1.02);
+            filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.1));
         }
 
         /* تنسيقات مخصصة للتصدير فقط تمنع الانحراف */
@@ -39,7 +61,6 @@
         }
 
         .pdf-content-wrapper {
-            /* الهوامش القانونية المتساوية: علوي 40مم، يمين 25مم، يسار 25مم، أسفل 25مم */
             padding-top: 40mm !important;
             padding-bottom: 25mm !important;
             padding-right: 25mm !important;

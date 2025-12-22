@@ -37,6 +37,7 @@ export interface FormData {
   subject: string;
   body: string;
   requests: string;
+  fees: string;
   witnesses: string;
   documents: string;
   extraDetails: string;

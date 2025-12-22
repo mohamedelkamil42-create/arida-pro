@@ -6,17 +6,17 @@ import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, FOOTER_LINKS, SOCIAL_LI
 // --- Modern SVG Icons Components ---
 
 const GeneralIcon = () => (
-  <svg className="w-10 h-10 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-    <polyline points="14 2 14 8 20 8" />
-    <line x1="16" y1="13" x2="8" y2="13" />
-    <line x1="16" y1="17" x2="8" y2="17" />
-    <line x1="10" y1="9" x2="8" y2="9" />
+    <path d="M14 2v6h6" />
+    <path d="M16 13H8" />
+    <path d="M16 17H8" />
+    <path d="M10 9H8" />
   </svg>
 );
 
 const CivilIcon = () => (
-  <svg className="w-10 h-10 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 16s3-2 3-5a7 7 0 1 0-14 0c0 3 3 5 3 5" />
     <path d="M5 20h14" />
     <path d="M12 9v4" />
@@ -25,7 +25,7 @@ const CivilIcon = () => (
 );
 
 const CriminalIcon = () => (
-  <svg className="w-10 h-10 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     <path d="M12 8v4" />
     <path d="M12 16h.01" />
@@ -33,38 +33,38 @@ const CriminalIcon = () => (
 );
 
 const PersonalIcon = () => (
-  <svg className="w-10 h-10 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 21v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2" />
     <circle cx="9" cy="7" r="4" />
-    <path d="M19 21v-2a4 4 0 0 0-3-3.87" />
     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    <path d="M19 21v-2a4 4 0 0 0-3-3.87" />
   </svg>
 );
 
-// --- Social Icons Components ---
+// --- Social Icons Components (Small & Circular) ---
 
 const YouTubeIcon = () => (
-  <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.42a2.78 2.78 0 0 0-1.94 2C1 8.11 1 12 1 12s0 3.89.46 5.58a2.78 2.78 0 0 0 1.94 2c1.72.42 8.6.42 8.6.42s6.88 0 8.6-.42a2.78 2.78 0 0 0 1.94-2C23 15.89 23 12 23 12s0-3.89-.46-5.58z" />
     <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" />
   </svg>
 );
 
 const FacebookIcon = () => (
-  <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 );
 
 const EmailIcon = () => (
-  <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-    <polyline points="22,6 12,13 2,6" />
+    <path d="m22 6-10 7L2 6" />
   </svg>
 );
 
 const TikTokIcon = () => (
-  <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-4 h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
   </svg>
 );
@@ -77,6 +77,7 @@ const App: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
+  const categoryListRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState<IFormData>({
     userRole: 'محامي',
@@ -100,6 +101,7 @@ const App: React.FC = () => {
     subject: '',
     body: '',
     requests: '',
+    fees: '',
     witnesses: '',
     documents: '',
     extraDetails: '',
@@ -115,6 +117,12 @@ const App: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (activeCategory && categoryListRef.current) {
+        categoryListRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeCategory]);
 
   const goHome = () => {
     setIsEditing(false);
@@ -151,6 +159,7 @@ const App: React.FC = () => {
       subject: model.title,
       body: model.contentTemplate,
       requests: '',
+      fees: '',
       partyRole: model.category === Category.CRIMINAL ? 'الشاكي' : 'المدعي',
       secondPartyRole: model.category === Category.CRIMINAL ? 'المشكو ضده' : 'المدعى عليه'
     }));
@@ -167,27 +176,14 @@ const App: React.FC = () => {
   const exportToPDF = async () => {
     const element = document.getElementById('printable-document-content');
     if (!element) return;
-
     const fileName = formData.subject ? `${formData.subject}.pdf` : 'عريضة_قانونية.pdf';
-
     const opt = {
       margin: 0,
       filename: fileName,
       image: { type: 'jpeg', quality: 1.0 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true, 
-        backgroundColor: '#ffffff',
-        width: 794,
-        windowWidth: 794,
-        scrollY: 0,
-        scrollX: 0,
-        x: 0,
-        y: 0
-      },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', width: 794, windowWidth: 794, scrollY: 0, scrollX: 0, x: 0, y: 0 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-
     try {
       // @ts-ignore
       await html2pdf().set(opt).from(element).save();
@@ -233,10 +229,7 @@ const App: React.FC = () => {
     const signatureLabel = formData.userRole === 'محامي' ? `عن ${effectiveRole}` : effectiveRole;
 
     return (
-      <div 
-        id={id} 
-        className={`pdf-export-container petition-font ${isPreview ? 'shadow-2xl mx-auto' : ''}`}
-      >
+      <div id={id} className={`pdf-export-container petition-font ${isPreview ? 'shadow-2xl mx-auto' : ''}`}>
         <div className="pdf-content-wrapper">
           <div className="text-center font-bold text-[16pt] mb-1">لدى {formData.policeStation || '....................'}</div>
           <div className="text-center font-bold text-[16pt] mb-1">فيمابين</div>
@@ -245,12 +238,7 @@ const App: React.FC = () => {
           </div>
           <div className="text-center font-bold text-[16pt] mb-1">ضد</div>
           <div className="text-center font-bold text-[16pt] mb-2">
-            {renderPartyDetailsLine(
-                formData.defendantName, 
-                getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole), 
-                formData.defendantAddress, 
-                formData.defendantPhone
-            )}
+            {renderPartyDetailsLine(formData.defendantName, getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole), formData.defendantAddress, formData.defendantPhone)}
           </div>
           {formData.additionalStatement && (
             <div className="text-center font-bold text-[16pt] mb-1">{formData.additionalStatement}</div>
@@ -270,6 +258,12 @@ const App: React.FC = () => {
                 <div className="pr-4">{formData.requests}</div>
               </div>
             )}
+            {formData.fees && (
+              <div className="mt-4 text-center">
+                <p className="font-bold underline mb-1">الرسوم والأتعاب:</p>
+                <div className="font-bold">{formData.fees}</div>
+              </div>
+            )}
           </div>
           
           <div className="mt-auto border-t border-black/10 pt-4">
@@ -278,28 +272,32 @@ const App: React.FC = () => {
                <div className="text-center mr-auto ml-0 min-w-[200px]">
                   <p className="font-bold text-[16pt]">{signatureLabel}</p>
                   <p className="font-bold text-[16pt] mt-1">
-                    {formData.userRole === 'محامي' 
-                      ? (formData.lawyerName || '....................') 
-                      : (formData.applicantName || '....................')}
+                    {formData.userRole === 'محامي' ? (formData.lawyerName || '....................') : (formData.applicantName || '....................')}
                   </p>
                   <div className="border-t-[1.5pt] border-black w-full mt-6 mb-1"></div>
                   <p className="text-[14pt] font-bold">التوقيع</p>
                </div>
             </div>
-            <div className="mt-4 border-t border-black/10 pt-4 text-right">
-              <p className="font-bold underline text-[14pt] mb-1">الشهود:</p>
-              <div className="mb-4">
-                {formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).length > 0 ? (
-                  formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).map((w, idx) => (
-                    <p key={idx} className="text-[14pt]">{toArabicDigits(idx + 1)}. {w.trim()}</p>
-                  ))
-                ) : (
-                  <p className="text-[14pt]">١. ................................................................</p>
+            {(formData.witnesses.trim() || formData.documents.trim()) && (
+              <div className="mt-4 border-t border-black/10 pt-4 text-right">
+                {formData.witnesses.trim() && (
+                  <div className="mb-4">
+                    <p className="font-bold underline text-[14pt] mb-1">الشهود:</p>
+                    <div>
+                      {formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).map((w, idx) => (
+                        <p key={idx} className="text-[14pt]">{toArabicDigits(idx + 1)}. {w.trim()}</p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {formData.documents.trim() && (
+                  <div className="mt-2">
+                    <p className="font-bold underline text-[14pt] mb-1">المستندات المرفقة:</p>
+                    <p className="text-[14pt] opacity-80">{formData.documents}</p>
+                  </div>
                 )}
               </div>
-              <p className="font-bold underline text-[14pt] mb-1">المستندات المرفقة:</p>
-              <p className="text-[14pt] opacity-80">{formData.documents || '................................................................'}</p>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -308,24 +306,29 @@ const App: React.FC = () => {
 
   const inputClass = "p-4 border-2 border-slate-300 rounded-[1rem] focus:border-blue-600 focus:ring-4 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-400 font-medium bg-white text-right";
   const labelClass = "font-bold text-slate-800 mb-1 block text-right";
-  
-  const partyRoleOptions = [
-    'المدعي', 'المدعى عليه', 
-    'الشاكي', 'المشكو ضده', 
-    'مقدم الطلب', 'المقدم ضده الطلب',
-    'المتهم', 'المستأنف', 'المستأنف ضده', 
-    'الطاعن', 'المطعون ضده', 
-    'مقدم العريضة', 'مقدم ضده العريضة', 
-    'أخرى'
-  ];
+  const partyRoleOptions = ['المدعي', 'المدعى عليه', 'الشاكي', 'المشكو ضده', 'مقدم الطلب', 'المقدم ضده الطلب', 'المتهم', 'المستأنف', 'المستأنف ضده', 'الطاعن', 'المطعون ضده', 'مقدم العريضة', 'المقدم ضده العريضة', 'أخرى'];
 
   const DecoratedSubtitle = ({ className = "" }) => (
-    <div className={`flex items-center gap-3 ${className}`}>
-        <span className="h-px w-6 md:w-12 bg-blue-300"></span>
-        <p className="text-xs md:text-sm font-bold text-blue-600 whitespace-nowrap">محرر العرائض والطلبات</p>
-        <span className="h-px w-6 md:w-12 bg-blue-300"></span>
+    <div className={`flex items-center gap-2 md:gap-5 ${className}`}>
+        <span className="h-px w-4 md:w-16 bg-blue-300"></span>
+        <p className="text-sm md:text-2xl font-bold text-blue-600 whitespace-nowrap">محرر العرائض والطلبات</p>
+        <span className="h-px w-4 md:w-16 bg-blue-300"></span>
     </div>
   );
+
+  const ColorfulText = ({ text }: { text: string }) => {
+    const words = text.split(' ');
+    const colors = ['text-blue-600', 'text-emerald-600', 'text-indigo-600', 'text-rose-600', 'text-slate-700', 'text-amber-600', 'text-teal-600', 'text-violet-600', 'text-cyan-600', 'text-fuchsia-600', 'text-sky-600'];
+    return (
+        <p className="text-sm md:text-2xl font-bold leading-relaxed md:leading-loose cursor-default flex flex-wrap justify-center gap-x-2">
+            {words.map((word, i) => (
+                <span key={i} className={`${colors[i % colors.length]} hover:scale-110 hover:brightness-125 transition-all duration-300 interactive-legal-text`}>
+                    {word}
+                </span>
+            ))}
+        </p>
+    );
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -333,53 +336,57 @@ const App: React.FC = () => {
         <PrintableDocument id="printable-document-content" />
       </div>
 
-      <header className="bg-white/95 backdrop-blur-lg shadow-sm py-4 sticky top-0 z-50 px-4 no-print border-b border-gray-100">
+      <header className="bg-white/95 backdrop-blur-lg py-4 md:py-6 sticky top-0 z-50 px-4 no-print border-b border-gray-100">
         <div className="container mx-auto flex flex-col items-center">
             <button onClick={goHome} className="flex flex-col items-center group transition-transform hover:scale-105 active:scale-95">
-                <h1 className="text-3xl md:text-5xl font-bold text-emerald-600 drop-shadow-sm group-hover:text-emerald-500 transition-colors">MEELAWFIRM</h1>
-                <DecoratedSubtitle className="mt-1" />
+                <h1 className="text-3xl md:text-5xl font-black text-emerald-600 drop-shadow-sm group-hover:text-emerald-500 transition-colors tracking-tight">MEELAWFIRM</h1>
+                <DecoratedSubtitle className="mt-2 md:mt-3" />
             </button>
         </div>
       </header>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-3 md:py-6">
         {!isEditing ? (
-          <>
-            <div ref={searchRef} className="max-w-3xl mx-auto mb-12 relative no-print">
+          <div className="flex flex-col gap-4 md:gap-8">
+            <div className="max-w-4xl mx-auto text-center px-4 animate-in fade-in slide-in-from-top-4 duration-1000">
+               <ColorfulText text="لكتابة العرائض والطلبات والاستئنافات والطعون بسهولة، عبر البحث أو اختيار نوع العريضة، مع محرر عام للنماذج غير المتوفرة" />
+            </div>
+
+            <div ref={searchRef} className="max-w-3xl mx-auto w-full relative no-print z-40">
               <input
                 type="text"
-                placeholder="ابحث عن العريضة المطلوبة... (قتل، نفقة، إخلاء...)"
-                className="w-full p-6 pr-14 rounded-[2rem] border-2 border-gray-100 outline-none shadow-xl text-xl text-right focus:border-emerald-400 transition-all"
+                placeholder="ابحث عن العريضة المطلوبة... (مثال: دعوى إخلاء، مطالبة مالية، نفقة)"
+                className="w-full p-4 md:p-6 pr-12 md:pr-14 rounded-[1.5rem] md:rounded-[2rem] border-2 border-gray-100 outline-none shadow-xl text-lg md:text-xl text-right focus:border-blue-400 transition-all focus:ring-4 focus:ring-blue-50"
                 value={searchQuery}
                 onFocus={() => setIsSearchFocused(true)}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               {isSearchFocused && searchQuery.trim() && (
-                <div className="absolute top-full left-0 right-0 bg-white shadow-2xl rounded-[2rem] mt-4 overflow-hidden z-50 border border-gray-100">
+                <div className="absolute top-full left-0 right-0 bg-white shadow-2xl rounded-[1.5rem] md:rounded-[2rem] mt-2 overflow-hidden z-50 border border-gray-100 animate-in zoom-in-95 duration-200">
                     {filteredModels.map(model => (
-                      <button key={model.id} onClick={() => handleModelSelect(model)} className="w-full text-right px-8 py-5 hover:bg-emerald-50 flex justify-between items-center transition-all group">
-                        <span className="font-bold text-gray-700 group-hover:text-emerald-700">{model.title}</span>
-                        <span className="text-xs text-gray-400">{model.category}</span>
+                      <button key={model.id} onClick={() => handleModelSelect(model)} className="w-full text-right px-6 md:px-8 py-4 md:py-5 hover:bg-blue-50 flex justify-between items-center transition-all group border-b border-gray-50 last:border-none">
+                        <span className="font-bold text-gray-700 group-hover:text-blue-700">{model.title}</span>
+                        <span className="text-[10px] md:text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full">{model.category}</span>
                       </button>
                     ))}
                 </div>
               )}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-6xl mx-auto mb-16 no-print">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 max-w-6xl mx-auto w-full no-print">
               {[
                 { id: Category.GENERAL, title: 'المحرر العام', icon: <GeneralIcon />, gradient: 'from-indigo-600 to-indigo-700' },
-                { id: Category.CIVIL, title: 'العرائض المدنية', icon: <CivilIcon />, gradient: 'from-emerald-600 to-emerald-700' },
+                { id: Category.CIVIL, title: 'العرائض المدنية', icon: <CivilIcon />, gradient: 'from-blue-600 to-blue-700' },
                 { id: Category.CRIMINAL, title: 'العرائض الجنائية', icon: <CriminalIcon />, gradient: 'from-slate-700 to-slate-800' },
                 { id: Category.PERSONAL_STATUS, title: 'أحوال شخصية', icon: <PersonalIcon />, gradient: 'from-rose-600 to-rose-700' }
               ].map(item => (
                 <button
                   key={item.id}
                   onClick={() => handleCategoryClick(item.id as Category)}
-                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-2 md:p-10 rounded-[2rem] shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center aspect-square w-full`}
+                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-4 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center aspect-square w-full active:scale-95`}
                 >
-                  <div className="mb-2">{item.icon}</div>
-                  <span className="text-sm md:text-2xl font-bold leading-tight px-1 break-words max-w-full">
+                  <div className="mb-2 md:mb-4">{item.icon}</div>
+                  <span className="text-[11px] md:text-2xl font-bold leading-tight px-1">
                     {item.title}
                   </span>
                 </button>
@@ -387,25 +394,31 @@ const App: React.FC = () => {
             </div>
 
             {activeCategory && activeCategory !== Category.GENERAL && (
-              <div className="max-w-5xl mx-auto bg-white rounded-[2rem] p-8 shadow-2xl border border-gray-100 no-print animate-in zoom-in-95">
-                <div className="flex justify-between items-center mb-6 border-b pb-4">
-                  <h2 className="text-xl md:text-2xl font-bold">اختر نوع العريضة ({activeCategory})</h2>
-                  <button onClick={() => setActiveCategory(null)} className="text-red-500 font-bold hover:scale-110 transition-transform">إغلاق ×</button>
+              <div ref={categoryListRef} className="max-w-5xl mx-auto w-full bg-white rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-10 shadow-2xl border border-blue-50 no-print animate-in slide-in-from-bottom-8 fade-in duration-500">
+                <div className="flex justify-between items-center mb-6 md:mb-8 border-b border-gray-100 pb-4 md:pb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-8 bg-blue-500 rounded-full"></div>
+                    <h2 className="text-lg md:text-3xl font-bold text-slate-800">قائمة {activeCategory}</h2>
+                  </div>
+                  <button onClick={() => setActiveCategory(null)} className="w-10 h-10 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all text-xl font-bold"> × </button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                   {PETITION_MODELS.filter(m => m.category === activeCategory).map(model => (
-                    <button key={model.id} onClick={() => handleModelSelect(model)} className="p-4 border border-gray-100 rounded-xl hover:bg-emerald-50 text-right transition-all font-bold text-gray-700 hover:text-emerald-700">
-                      {model.title}
+                    <button key={model.id} onClick={() => handleModelSelect(model)} className="p-4 md:p-5 border border-gray-100 rounded-2xl hover:bg-blue-50 text-right transition-all group flex items-start gap-3 hover:border-blue-200">
+                      <div className="w-2 h-2 rounded-full bg-blue-200 group-hover:bg-blue-500 mt-2 transition-colors"></div>
+                      <span className="font-bold text-sm md:text-lg text-gray-700 group-hover:text-blue-700 leading-snug">{model.title}</span>
                     </button>
                   ))}
                 </div>
               </div>
             )}
-          </>
+          </div>
         ) : (
-          <div className="max-w-6xl mx-auto space-y-8 no-print">
-            <div className="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-xl border-t-8 border-t-emerald-600">
-              <button onClick={goHome} className="mb-6 text-emerald-600 font-bold hover:translate-x-1 transition-transform">&larr; العودة للأنواع</button>
+          <div className="max-w-6xl mx-auto space-y-6 md:space-y-8 no-print animate-in fade-in duration-500">
+            <div className="bg-white p-5 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-xl border-t-8 border-t-blue-600">
+              <button onClick={goHome} className="mb-6 flex items-center gap-2 text-blue-600 font-bold hover:translate-x-1 transition-transform">
+                <span>&rarr;</span> <span>العودة للرئيسية</span>
+              </button>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col">
@@ -419,21 +432,14 @@ const App: React.FC = () => {
                 {formData.userRole === 'محامي' ? (
                   <div className="flex flex-col animate-in slide-in-from-top-4 duration-300">
                     <label className={labelClass}>اسم المحامي</label>
-                    <input 
-                      type="text" 
-                      className={inputClass} 
-                      placeholder="أدخل اسم المحامي بالكامل"
-                      value={formData.lawyerName} 
-                      onChange={e => setFormData({...formData, lawyerName: e.target.value})} 
-                    />
+                    <input type="text" className={inputClass} placeholder="مثال: الاسم بالكامل" value={formData.lawyerName} onChange={e => setFormData({...formData, lawyerName: e.target.value})} />
                   </div>
                 ) : <div className="hidden md:block"></div>}
 
-                {/* القسم الأول: مقدم الطلب / العريضة */}
-                <div className="md:col-span-2 bg-emerald-50/30 p-6 rounded-[2rem] border border-emerald-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="md:col-span-2 bg-blue-50/20 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-blue-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="flex flex-col">
-                      <label className={labelClass}>الاسم الكامل</label>
-                      <input type="text" className={inputClass} value={formData.applicantName} onChange={e => setFormData({...formData, applicantName: e.target.value})} />
+                      <label className={labelClass}>اسم مقدم الطلب</label>
+                      <input type="text" className={inputClass} placeholder="مثال: الاسم الرباعي هنا" value={formData.applicantName} onChange={e => setFormData({...formData, applicantName: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
                       <label className={labelClass}>الصفة</label>
@@ -442,80 +448,70 @@ const App: React.FC = () => {
                       </select>
                     </div>
                     <div className="flex flex-col">
-                      <label className={labelClass}>العنوان</label>
-                      <input type="text" className={inputClass} value={formData.applicantAddress} onChange={e => setFormData({...formData, applicantAddress: e.target.value})} />
+                      <label className={labelClass}>عنوان مقدم الطلب</label>
+                      <input type="text" className={inputClass} placeholder="مثال: المدينة - الحي - الرقم" value={formData.applicantAddress} onChange={e => setFormData({...formData, applicantAddress: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
-                      <label className={labelClass}>رقم الهاتف</label>
-                      <input type="text" className={inputClass} dir="ltr" value={formData.applicantPhone} onChange={e => setFormData({...formData, applicantPhone: e.target.value})} />
+                      <label className={labelClass}>هاتف مقدم الطلب</label>
+                      <input type="text" className={inputClass} dir="ltr" placeholder="0000000000" value={formData.applicantPhone} onChange={e => setFormData({...formData, applicantPhone: e.target.value})} />
                     </div>
                 </div>
 
-                {/* القسم الثاني: المقدم ضده الطلب / العريضة */}
-                <div className="md:col-span-2 bg-red-50/30 p-6 rounded-[2rem] border border-red-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="md:col-span-2 bg-red-50/20 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-red-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="flex flex-col">
                       <label className={labelClass}>اسم الخصم</label>
-                      <input type="text" className={inputClass} value={formData.defendantName} onChange={e => setFormData({...formData, defendantName: e.target.value})} />
+                      <input type="text" className={inputClass} placeholder="مثال: اسم الخصم أو الشركة" value={formData.defendantName} onChange={e => setFormData({...formData, defendantName: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
-                      <label className={labelClass}>الصفة</label>
+                      <label className={labelClass}>صفة الخصم</label>
                       <select className={inputClass} value={formData.secondPartyRole} onChange={e => setFormData({...formData, secondPartyRole: e.target.value})}>
                         {partyRoleOptions.map(o => <option key={o}>{o}</option>)}
                       </select>
                     </div>
                     <div className="flex flex-col">
-                      <label className={labelClass}>العنوان</label>
-                      <input type="text" className={inputClass} value={formData.defendantAddress} onChange={e => setFormData({...formData, defendantAddress: e.target.value})} />
+                      <label className={labelClass}>عنوان الخصم</label>
+                      <input type="text" className={inputClass} placeholder="مثال: العنوان بالتفصيل" value={formData.defendantAddress} onChange={e => setFormData({...formData, defendantAddress: e.target.value})} />
                     </div>
                     <div className="flex flex-col">
-                      <label className={labelClass}>الهاتف</label>
-                      <input type="text" className={inputClass} dir="ltr" value={formData.defendantPhone} onChange={e => setFormData({...formData, defendantPhone: e.target.value})} />
+                      <label className={labelClass}>هاتف الخصم</label>
+                      <input type="text" className={inputClass} dir="ltr" placeholder="0000000000" value={formData.defendantPhone} onChange={e => setFormData({...formData, defendantPhone: e.target.value})} />
                     </div>
                 </div>
 
-                {/* حقل البيان الإضافي الجديد */}
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>بيان إضافي (يظهر بعد أسماء الأطراف)</label>
-                  <input 
-                    type="text" 
-                    className={inputClass} 
-                    placeholder="مثلاً: بصفته ولياً عن القاصر، أو أي تفاصيل إضافية للأطراف"
-                    value={formData.additionalStatement} 
-                    onChange={e => setFormData({...formData, additionalStatement: e.target.value})} 
-                  />
+                  <input type="text" className={inputClass} placeholder="مثال: بصفته ولياً طبيعياً عن القاصر..." value={formData.additionalStatement} onChange={e => setFormData({...formData, additionalStatement: e.target.value})} />
                 </div>
 
                 <div className="flex flex-col">
                   <label className={labelClass}>الجهة (لدى...)</label>
-                  <input 
-                    type="text" 
-                    className={inputClass} 
-                    placeholder="مثلاً: محكمة، نيابة، قسم شرطة"
-                    value={formData.policeStation} 
-                    onChange={e => setFormData({...formData, policeStation: e.target.value})} 
-                  />
+                  <input type="text" className={inputClass} placeholder="مثال: اسم المحكمة أو النيابة أو القسم" value={formData.policeStation} onChange={e => setFormData({...formData, policeStation: e.target.value})} />
                 </div>
                 <div className="flex flex-col"><label className={labelClass}>المسؤول</label><select className={inputClass} value={formData.judgeTitle} onChange={e => setFormData({...formData, judgeTitle: e.target.value})}>{COURTS.concat(INVESTIGATION_OFFICES).map(c => <option key={c}>{c}</option>)}</select></div>
-                <div className="flex flex-col"><label className={labelClass}>رقم الدعوى</label><input type="text" className={inputClass} value={formData.caseNumber} onChange={e => setFormData({...formData, caseNumber: e.target.value})} /></div>
-                <div className="flex flex-col"><label className={labelClass}>الموضوع</label><input type="text" className={`${inputClass} font-bold`} value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} /></div>
+                <div className="flex flex-col"><label className={labelClass}>رقم الدعوى</label><input type="text" className={inputClass} placeholder="مثال: 000 / 0000" value={formData.caseNumber} onChange={e => setFormData({...formData, caseNumber: e.target.value})} /></div>
+                <div className="flex flex-col"><label className={labelClass}>الموضوع</label><input type="text" className={`${inputClass} font-bold`} placeholder="مثال: موضوع الدعوى باختصار" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} /></div>
 
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>وقائع العريضة</label>
-                  <textarea rows={8} className={`${inputClass} text-xl leading-relaxed`} value={formData.body} onChange={e => setFormData({...formData, body: e.target.value})} />
+                  <textarea rows={8} className={`${inputClass} text-xl leading-relaxed`} placeholder="اكتب وقائع وتفاصيل العريضة هنا..." value={formData.body} onChange={e => setFormData({...formData, body: e.target.value})} />
                 </div>
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>الطلبات</label>
-                  <textarea rows={3} className={inputClass} value={formData.requests} onChange={e => setFormData({...formData, requests: e.target.value})} />
+                  <textarea rows={3} className={inputClass} placeholder="مثال: نلتمس إلزام المدعى عليه بسداد المبلغ المذكور..." value={formData.requests} onChange={e => setFormData({...formData, requests: e.target.value})} />
                 </div>
-                <div className="md:col-span-2 flex flex-col"><label className={labelClass}>الشهود</label><textarea rows={2} className={inputClass} value={formData.witnesses} onChange={e => setFormData({...formData, witnesses: e.target.value})} /></div>
-                <div className="md:col-span-2 flex flex-col"><label className={labelClass}>المستندات</label><input type="text" className={inputClass} value={formData.documents} onChange={e => setFormData({...formData, documents: e.target.value})} /></div>
+                <div className="md:col-span-2 flex flex-col">
+                  <label className={labelClass}>الرسوم والأتعاب</label>
+                  <input type="text" className={inputClass} placeholder="رسوم المحاماة الاتفاقية مبلغ كذا ولأجل الرسوم تقدر قيمة الدعوى بكذا" value={formData.fees} onChange={e => setFormData({...formData, fees: e.target.value})} />
+                </div>
+                <div className="md:col-span-2 flex flex-col"><label className={labelClass}>الشهود</label><textarea rows={2} className={inputClass} placeholder="مثال: الشاهد الأول (000) - الشاهد الثاني (000)" value={formData.witnesses} onChange={e => setFormData({...formData, witnesses: e.target.value})} /></div>
+                <div className="md:col-span-2 flex flex-col"><label className={labelClass}>المستندات</label><input type="text" className={inputClass} placeholder="مثال: صورة عقد البيع، توكيل رسمي" value={formData.documents} onChange={e => setFormData({...formData, documents: e.target.value})} /></div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
-                <button onClick={() => setShowPreviewModal(true)} className="p-5 bg-slate-800 text-white rounded-2xl font-bold hover:bg-slate-700 shadow-lg active:scale-95 transition-all">معاينة المستند</button>
-                <button onClick={exportToWord} className="p-5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-500 shadow-lg active:scale-95 transition-all">تصدير Word</button>
-                <button onClick={exportToPDF} className="p-5 bg-rose-600 text-white rounded-2xl font-bold hover:bg-rose-500 shadow-lg active:scale-95 transition-all">حفظ PDF</button>
-                <button onClick={handlePrint} className="p-5 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-500 shadow-lg active:scale-95 transition-all">طباعة فورية</button>
+                <button onClick={() => setShowPreviewModal(true)} className="p-4 md:p-5 bg-slate-800 text-white rounded-2xl font-bold hover:bg-slate-700 shadow-lg active:scale-95 transition-all">معاينة المستند</button>
+                <button onClick={exportToWord} className="p-4 md:p-5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-500 shadow-lg active:scale-95 transition-all">تصدير Word</button>
+                <button onClick={exportToPDF} className="p-4 md:p-5 bg-rose-600 text-white rounded-2xl font-bold hover:bg-rose-500 shadow-lg active:scale-95 transition-all">حفظ PDF</button>
+                <button onClick={handlePrint} className="p-4 md:p-5 bg-blue-700 text-white rounded-2xl font-bold hover:bg-blue-800 shadow-lg active:scale-95 transition-all">طباعة فورية</button>
               </div>
             </div>
           </div>
@@ -524,13 +520,13 @@ const App: React.FC = () => {
 
       {showPreviewModal && (
         <div className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 md:p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-5xl rounded-[2rem] shadow-2xl flex flex-col max-h-[98vh]">
-            <div className="p-4 flex flex-col sm:flex-row justify-between items-center border-b bg-slate-50 rounded-t-[2rem] gap-4">
-              <span className="font-bold text-lg text-emerald-800">معاينة التنسيق (A4)</span>
+          <div className="bg-white w-full max-w-5xl rounded-[1.5rem] md:rounded-[2rem] shadow-2xl flex flex-col max-h-[98vh]">
+            <div className="p-4 flex flex-col sm:flex-row justify-between items-center border-b bg-slate-50 rounded-t-[1.5rem] md:rounded-t-[2rem] gap-4">
+              <span className="font-bold text-lg text-blue-800">معاينة التنسيق (A4)</span>
               <div className="flex flex-wrap gap-2 justify-center">
                 <button onClick={exportToPDF} className="p-2 bg-rose-600 text-white rounded-lg text-sm px-4 hover:bg-rose-700 transition-colors font-bold">حفظ PDF</button>
                 <button onClick={exportToWord} className="p-2 bg-blue-600 text-white rounded-lg text-sm px-4 hover:bg-blue-700 transition-colors font-bold">Word</button>
-                <button onClick={handlePrint} className="p-2 bg-emerald-600 text-white rounded-lg text-sm px-4 hover:bg-emerald-700 transition-colors font-bold">طباعة</button>
+                <button onClick={handlePrint} className="p-2 bg-blue-700 text-white rounded-lg text-sm px-4 hover:bg-blue-800 transition-colors font-bold">طباعة</button>
                 <button onClick={() => setShowPreviewModal(false)} className="p-2 bg-gray-200 text-gray-700 rounded-lg text-sm px-4 hover:bg-gray-300 transition-colors">إغلاق ×</button>
               </div>
             </div>
@@ -543,45 +539,34 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <footer className="bg-slate-50 py-16 px-4 no-print border-t border-slate-200 mt-auto text-slate-800">
+      <footer className="bg-slate-50 py-8 md:py-10 px-4 no-print border-t border-slate-200 mt-auto text-slate-800">
         <div className="container mx-auto max-w-6xl text-center flex flex-col items-center">
-          
           <button onClick={scrollToTop} className="group transition-transform hover:-translate-y-1 active:scale-95 mb-4">
-            <h2 className="text-4xl md:text-5xl font-bold text-emerald-600 group-hover:text-emerald-500 transition-colors">MEELAWFIRM</h2>
+            <h2 className="text-lg md:text-xl font-bold text-blue-600 group-hover:text-blue-500 transition-colors">MEELAWFIRM</h2>
           </button>
-
-          <div className="flex justify-center items-center gap-4 md:gap-6 mb-10 flex-wrap">
-            <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" 
-              className="group p-4 bg-gradient-to-br from-red-600 to-red-700 text-white rounded-2xl shadow-lg hover:-translate-y-2 hover:shadow-red-500/20 transition-all duration-300">
+          <div className="flex justify-center items-center gap-3 md:gap-4 mb-4 flex-wrap">
+            <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="group p-2 md:p-2.5 bg-gradient-to-br from-red-600 to-red-700 text-white rounded-full shadow-md hover:-translate-y-1 hover:shadow-red-500/20 transition-all duration-300 flex items-center justify-center aspect-square">
                <YouTubeIcon />
             </a>
-            <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" 
-              className="group p-4 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-2xl shadow-lg hover:-translate-y-2 hover:shadow-blue-500/20 transition-all duration-300">
+            <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="group p-2 md:p-2.5 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full shadow-md hover:-translate-y-1 hover:shadow-blue-500/20 transition-all duration-300 flex items-center justify-center aspect-square">
                <FacebookIcon />
             </a>
-            <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" 
-              className="group p-4 bg-gradient-to-br from-slate-700 to-slate-900 text-white rounded-2xl shadow-lg hover:-translate-y-2 hover:shadow-slate-500/20 transition-all duration-300">
+            <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" className="group p-2 md:p-2.5 bg-gradient-to-br from-slate-700 to-slate-900 text-white rounded-full shadow-md hover:-translate-y-1 hover:shadow-slate-500/20 transition-all duration-300 flex items-center justify-center aspect-square">
                <TikTokIcon />
             </a>
-            <a href={`mailto:${SOCIAL_LINKS.email}`} 
-              className="group p-4 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-2xl shadow-lg hover:-translate-y-2 hover:shadow-emerald-500/20 transition-all duration-300">
+            <a href={`mailto:${SOCIAL_LINKS.email}`} className="group p-2 md:p-2.5 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full shadow-md hover:-translate-y-1 hover:shadow-blue-500/20 transition-all duration-300 flex items-center justify-center aspect-square">
                <EmailIcon />
             </a>
           </div>
-
-          <DecoratedSubtitle className="mb-8" />
-          
-          <div className="flex justify-center gap-4 md:gap-8 text-[12px] md:text-[14px] text-slate-500 font-bold mb-10 flex-wrap max-w-2xl">
+          <div className="flex justify-center gap-4 md:gap-6 text-[8px] md:text-[10px] text-slate-500 font-bold mb-6 flex-wrap max-w-2xl px-2">
             {FOOTER_LINKS.map(l => (
-              <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-600 transition-colors border-b border-transparent hover:border-emerald-600 pb-1">
+              <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors border-b border-transparent hover:border-blue-600 pb-0.5">
                 {l.name}
               </a>
             ))}
           </div>
-
-          <div className="w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent mb-8 opacity-50"></div>
-          
-          <p className="text-[11px] text-slate-400 font-bold tracking-widest uppercase">&copy; 2026 MEELAWFIRM - PROFESSIONAL LEGAL PWA V3.8.6</p>
+          <div className="w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent mb-4 opacity-30"></div>
+          <p className="text-[7px] md:text-[9px] text-slate-400 font-bold tracking-widest uppercase px-4">&copy; 2026 MEELAWFIRM - PROFESSIONAL LEGAL PWA V4.3.0</p>
         </div>
       </footer>
     </div>
