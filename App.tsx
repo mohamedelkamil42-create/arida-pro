@@ -76,6 +76,7 @@ const App: React.FC = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [triggerPulse, setTriggerPulse] = useState(0);
   const searchRef = useRef<HTMLDivElement>(null);
   const categoryListRef = useRef<HTMLDivElement>(null);
 
@@ -129,6 +130,7 @@ const App: React.FC = () => {
     setSelectedModel(null);
     setActiveCategory(null);
     setSearchQuery('');
+    setTriggerPulse(prev => prev + 1);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -308,13 +310,17 @@ const App: React.FC = () => {
   const labelClass = "font-bold text-slate-800 mb-1 block text-right";
   const partyRoleOptions = ['المدعي', 'المدعى عليه', 'الشاكي', 'المشكو ضده', 'مقدم الطلب', 'المقدم ضده الطلب', 'المتهم', 'المستأنف', 'المستأنف ضده', 'الطاعن', 'المطعون ضده', 'مقدم العريضة', 'المقدم ضده العريضة', 'أخرى'];
 
-  const DecoratedSubtitle = ({ className = "" }) => (
-    <div className={`flex items-center gap-2 md:gap-5 ${className}`}>
-        <span className="h-px w-4 md:w-16 bg-blue-300"></span>
-        <p className="text-sm md:text-2xl font-bold text-blue-600 whitespace-nowrap">محرر العرائض والطلبات</p>
-        <span className="h-px w-4 md:w-16 bg-blue-300"></span>
-    </div>
-  );
+  const DecoratedSubtitle = ({ className = "" }) => {
+    return (
+      <div className={`flex items-center gap-2 md:gap-5 ${className}`}>
+          <span className="h-px w-4 md:w-16 bg-blue-300"></span>
+          <p className="text-sm md:text-2xl font-bold text-blue-600 whitespace-nowrap py-2 shine-effect">
+            محرر العرائض والطلبات
+          </p>
+          <span className="h-px w-4 md:w-16 bg-blue-300"></span>
+      </div>
+    );
+  };
 
   const ColorfulText = ({ text }: { text: string }) => {
     const words = text.split(' ');
@@ -329,6 +335,13 @@ const App: React.FC = () => {
         </p>
     );
   };
+
+  const categories = [
+    { id: Category.GENERAL, title: 'المحرر العام', icon: <GeneralIcon />, gradient: 'from-blue-600 to-blue-700' },
+    { id: Category.CIVIL, title: 'العرائض المدنية', icon: <CivilIcon />, gradient: 'from-emerald-600 to-emerald-700' },
+    { id: Category.CRIMINAL, title: 'العرائض الجنائية', icon: <CriminalIcon />, gradient: 'from-rose-600 to-rose-700' },
+    { id: Category.PERSONAL_STATUS, title: 'أحوال شخصية', icon: <PersonalIcon />, gradient: 'from-slate-800 to-black' }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -374,16 +387,12 @@ const App: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 max-w-6xl mx-auto w-full no-print">
-              {[
-                { id: Category.GENERAL, title: 'المحرر العام', icon: <GeneralIcon />, gradient: 'from-indigo-600 to-indigo-700' },
-                { id: Category.CIVIL, title: 'العرائض المدنية', icon: <CivilIcon />, gradient: 'from-blue-600 to-blue-700' },
-                { id: Category.CRIMINAL, title: 'العرائض الجنائية', icon: <CriminalIcon />, gradient: 'from-slate-700 to-slate-800' },
-                { id: Category.PERSONAL_STATUS, title: 'أحوال شخصية', icon: <PersonalIcon />, gradient: 'from-rose-600 to-rose-700' }
-              ].map(item => (
+              {categories.map((item, idx) => (
                 <button
-                  key={item.id}
+                  key={`${item.id}-${triggerPulse}`}
                   onClick={() => handleCategoryClick(item.id as Category)}
-                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-4 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center aspect-square w-full active:scale-95`}
+                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-4 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center aspect-square w-full active:scale-95 trigger-pulse`}
+                  style={{ animationDelay: `${idx * 0.1}s` }}
                 >
                   <div className="mb-2 md:mb-4">{item.icon}</div>
                   <span className="text-[11px] md:text-2xl font-bold leading-tight px-1">

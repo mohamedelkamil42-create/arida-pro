@@ -47,6 +47,28 @@
             filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.1));
         }
 
+        /* حركة اللمعان الخفيفة */
+        @keyframes shine {
+            0% { opacity: 0.8; filter: brightness(1); }
+            50% { opacity: 1; filter: brightness(1.4) drop-shadow(0 0 8px rgba(59, 130, 246, 0.3)); }
+            100% { opacity: 0.8; filter: brightness(1); }
+        }
+
+        /* حركة نبض المربعات */
+        @keyframes box-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .shine-effect {
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        .trigger-pulse {
+            animation: box-pulse 0.8s ease-in-out;
+        }
+
         /* تنسيقات مخصصة للتصدير فقط تمنع الانحراف */
         .pdf-export-container {
             width: 210mm !important;
