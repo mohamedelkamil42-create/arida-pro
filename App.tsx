@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Category, PetitionModel, FormData as IFormData, SavedPetition } from './types.ts';
-import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, FOOTER_LINKS, SOCIAL_LINKS } from './constants.ts';
+import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, REGISTRARS, FOOTER_LINKS, SOCIAL_LINKS } from './constants.ts';
 
 // --- Modern SVG Icons Components ---
 
@@ -157,7 +157,7 @@ const App: React.FC = () => {
   const [formData, setFormData] = useState<IFormData>({
     userRole: 'محامي',
     lawyerName: '',
-    partyRole: 'الشاكي',
+    partyRole: 'مقدم الطلب',
     customPartyRole: '',
     secondPartyRole: 'المشكو ضده',
     customSecondPartyRole: '',
@@ -171,7 +171,8 @@ const App: React.FC = () => {
     investigator: '',
     prosecutor: '',
     courtName: '',
-    judgeTitle: COURTS[0],
+    judgeTitle: 'ملء يدوي',
+    customJudgeTitle: '',
     caseNumber: '',
     subject: '',
     body: '',
@@ -333,11 +334,11 @@ const App: React.FC = () => {
     link.click();
   };
 
-  const getEffectivePartyRole = (role: string, custom: string) => role === 'أخرى' ? custom : role;
+  const getEffectivePartyRole = (role: string, custom: string) => role === 'ملء يدوي' ? custom : role;
 
   const renderPartyDetailsLine = (name: string, role: string, address: string, phone: string) => {
     const parts = [];
-    parts.push(name || '....................');
+    parts.push(name);
     parts.push(role);
     if (address && address.trim()) parts.push(address.trim());
     if (phone && phone.trim()) parts.push(phone.trim());
@@ -346,27 +347,57 @@ const App: React.FC = () => {
 
   const PrintableDocument = ({ id, isPreview = false }: { id: string, isPreview?: boolean }) => {
     const effectiveRole = getEffectivePartyRole(formData.partyRole, formData.customPartyRole);
-    const signatureLabel = formData.userRole === 'محامي' ? `عن ${effectiveRole}` : effectiveRole;
+    const defendantRole = getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole);
+    
+    // منطق "صفة الموقع"
+    const hasSpecificRole = effectiveRole && effectiveRole.trim() !== '';
+    let signatureLabel = '';
+    if (formData.userRole === 'محامي') {
+        signatureLabel = hasSpecificRole ? `عن ${effectiveRole}` : 'عن مقدم الطلب';
+    } else {
+        signatureLabel = hasSpecificRole ? effectiveRole : 'مقدم الطلب';
+    }
+    
+    const displayJudgeTitle = formData.judgeTitle === 'ملء يدوي' ? formData.customJudgeTitle : formData.judgeTitle;
 
     return (
       <div id={id} className={`pdf-export-container petition-font ${isPreview ? 'shadow-2xl mx-auto' : ''}`}>
         <div className="pdf-content-wrapper">
           <div className="text-center font-bold text-[16pt] mb-1">لدى {formData.policeStation || '....................'}</div>
-          <div className="text-center font-bold text-[16pt] mb-1">فيمابين</div>
-          <div className="text-center font-bold text-[16pt] mb-1">
-            {renderPartyDetailsLine(formData.applicantName, effectiveRole, formData.applicantAddress, formData.applicantPhone)}
-          </div>
-          <div className="text-center font-bold text-[16pt] mb-1">ضد</div>
-          <div className="text-center font-bold text-[16pt] mb-2">
-            {renderPartyDetailsLine(formData.defendantName, getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole), formData.defendantAddress, formData.defendantPhone)}
-          </div>
+          
+          {formData.applicantName && (
+            <>
+              {/* تظهر "فيمابين" فقط إذا كان هناك خصم مذكور */}
+              {formData.defendantName && (
+                <div className="text-center font-bold text-[16pt] mb-1">فيمابين</div>
+              )}
+              <div className="text-center font-bold text-[16pt] mb-1">
+                {renderPartyDetailsLine(formData.applicantName, effectiveRole || 'مقدم الطلب', formData.applicantAddress, formData.applicantPhone)}
+              </div>
+            </>
+          )}
+
+          {formData.defendantName && (
+            <>
+              {/* تظهر "ضد" فقط إذا تم ملء اسم الخصم */}
+              <div className="text-center font-bold text-[16pt] mb-1">ضد</div>
+              <div className="text-center font-bold text-[16pt] mb-2">
+                {renderPartyDetailsLine(formData.defendantName, defendantRole || 'المشار إليه', formData.defendantAddress, formData.defendantPhone)}
+              </div>
+            </>
+          )}
+
           {formData.additionalStatement && (
             <div className="text-center font-bold text-[16pt] mb-1">{formData.additionalStatement}</div>
           )}
-          <div className="text-center font-bold border-y border-black/40 py-1 mb-2 text-[16pt]">رقم الدعوى: {formData.caseNumber || '......... / .........'}</div>
+
+          {formData.caseNumber && (
+            <div className="text-center font-bold border-y border-black/40 py-1 mb-2 text-[16pt]">رقم الدعوى: {formData.caseNumber}</div>
+          )}
+
           <div className="text-center mb-4"><span className="font-bold underline text-[16pt]">الموضوع {formData.subject}</span></div>
           <div className="mb-2 border-b border-black/10 pb-1">
-            <div className="font-bold text-right text-[16pt]">السيد {formData.judgeTitle}</div>
+            <div className="font-bold text-right text-[16pt]">السيد {displayJudgeTitle || '....................'}</div>
             <div className="font-bold text-center text-[16pt]">الموقر</div>
           </div>
           <div className="text-center font-bold mb-2 text-[16pt]">بعد التحية والاحترام</div>
@@ -406,7 +437,8 @@ const App: React.FC = () => {
 
   const inputClass = "p-4 border-2 border-slate-300 rounded-[1rem] focus:border-blue-600 focus:ring-4 focus:ring-blue-100 outline-none transition-all placeholder:text-slate-400 font-medium bg-white text-right";
   const labelClass = "font-bold text-slate-800 mb-1 block text-right";
-  const partyRoleOptions = ['المدعي', 'المدعى عليه', 'الشاكي', 'المشكو ضده', 'مقدم الطلب', 'المقدم ضده الطلب', 'المتهم', 'المستأنف', 'المستأنف ضده', 'الطاعن', 'المطعون ضده', 'مقدم العريضة', 'المقدم ضده العريضة', 'أخرى'];
+  // تحديث خيارات الصفة: مقدم الطلب أولاً، وملء يدوي أخيراً
+  const partyRoleOptions = ['مقدم الطلب', 'المدعي', 'المدعى عليه', 'الشاكي', 'المشكو ضده', 'المقدم ضده الطلب', 'المتهم', 'المستأنف', 'المستأنف ضده', 'الطاعن', 'المطعون ضده', 'مقدم العريضة', 'المقدم ضده العريضة', 'ملء يدوي'];
 
   const DecoratedSubtitle = ({ className = "" }) => {
     return (
@@ -440,6 +472,10 @@ const App: React.FC = () => {
     { id: Category.CRIMINAL, title: 'العرائض الجنائية', icon: <CriminalIcon />, gradient: 'from-rose-600 to-rose-700' },
     { id: Category.PERSONAL_STATUS, title: 'أحوال شخصية', icon: <PersonalIcon />, gradient: 'from-slate-800 to-black' }
   ];
+
+  const combinedOfficials = useMemo(() => {
+    return ['ملء يدوي', ...COURTS, ...INVESTIGATION_OFFICES, ...REGISTRARS];
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -479,29 +515,44 @@ const App: React.FC = () => {
               </div>
               {isSearchFocused && searchQuery.trim() && (
                 <div className="absolute top-full left-0 right-0 bg-white shadow-2xl rounded-[1.5rem] md:rounded-[2rem] mt-2 overflow-hidden z-50 border border-gray-100 animate-in zoom-in-95 duration-200">
-                    {filteredModels.map(model => (
-                      <button key={model.id} onClick={() => handleModelSelect(model)} className="w-full text-right px-6 md:px-8 py-4 md:py-5 hover:bg-blue-50 flex justify-between items-center transition-all group border-b border-gray-50 last:border-none">
-                        <span className="font-bold text-gray-700 group-hover:text-blue-700">{model.title}</span>
-                        <span className="text-[10px] md:text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full">{model.category}</span>
-                      </button>
-                    ))}
+                    {filteredModels.length > 0 ? (
+                        filteredModels.map(model => (
+                          <button key={model.id} onClick={() => handleModelSelect(model)} className="w-full text-right px-6 md:px-8 py-4 md:py-5 hover:bg-blue-50 flex justify-between items-center transition-all group border-b border-gray-50 last:border-none">
+                            <span className="font-bold text-gray-700 group-hover:text-blue-700">{model.title}</span>
+                            <span className="text-[10px] md:text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded-full">{model.category}</span>
+                          </button>
+                        ))
+                    ) : (
+                        <div className="p-8 text-center flex flex-col items-center gap-4">
+                            <p className="text-gray-500 font-bold">عذراً، لم نجد نتائج تطابق بحثك.</p>
+                            <button 
+                                onClick={() => handleModelSelect(PETITION_MODELS[0])}
+                                className="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition-all shadow-md active:scale-95"
+                            >
+                                استخدم النموذج العام (محرر شامل)
+                            </button>
+                        </div>
+                    )}
                 </div>
               )}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-6xl mx-auto w-full no-print px-1">
               {categories.map((item, idx) => (
-                <button
-                  key={`${item.id}-${triggerPulse}`}
-                  onClick={() => handleCategoryClick(item.id as Category)}
-                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center aspect-square w-full active:scale-95 trigger-pulse`}
-                  style={{ animationDelay: `${idx * 0.1}s` }}
-                >
-                  <div className="mb-6 md:mb-6">{item.icon}</div>
-                  <span className="text-2xl md:text-2xl font-bold leading-tight px-1">
-                    {item.title}
-                  </span>
-                </button>
+                <div key={`${item.id}-${triggerPulse}`} className="entrance-wrapper" style={{ animationDelay: `${idx * 0.15}s` }}>
+                  <button
+                    onClick={() => handleCategoryClick(item.id as Category)}
+                    className={`category-button group overflow-hidden relative bg-gradient-to-br ${item.gradient} text-white p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-center aspect-square w-full active:scale-95`}
+                  >
+                    <div className="shine-overlay"></div>
+                    <div className="mb-6 md:mb-6 z-10">{item.icon}</div>
+                    <span className="text-2xl md:text-2xl font-bold leading-tight px-1 z-10">
+                      {item.title}
+                    </span>
+                    {/* تأثير التوهج الساكن */}
+                    <div className="absolute inset-0 rounded-[1.5rem] md:rounded-[2rem] bg-white opacity-0 group-hover:opacity-10 transition-opacity pointer-events-none"></div>
+                  </button>
+                </div>
               ))}
             </div>
 
@@ -617,8 +668,17 @@ const App: React.FC = () => {
                     <div className="flex flex-col">
                       <label className={labelClass}>الصفة</label>
                       <select className={inputClass} value={formData.partyRole} onChange={e => setFormData({...formData, partyRole: e.target.value})}>
-                        {partyRoleOptions.map(o => <option key={o}>{o}</option>)}
+                        {partyRoleOptions.map(o => <option key={o} value={o}>{o}</option>)}
                       </select>
+                      {formData.partyRole === 'ملء يدوي' && (
+                        <input 
+                          type="text" 
+                          className={`${inputClass} mt-2 border-blue-400 animate-in slide-in-from-top-2`} 
+                          placeholder="اكتب الصفة هنا..." 
+                          value={formData.customPartyRole} 
+                          onChange={e => setFormData({...formData, customPartyRole: e.target.value})} 
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col">
                       <label className={labelClass}>عنوان مقدم الطلب</label>
@@ -638,8 +698,17 @@ const App: React.FC = () => {
                     <div className="flex flex-col">
                       <label className={labelClass}>صفة الخصم</label>
                       <select className={inputClass} value={formData.secondPartyRole} onChange={e => setFormData({...formData, secondPartyRole: e.target.value})}>
-                        {partyRoleOptions.map(o => <option key={o}>{o}</option>)}
+                        {partyRoleOptions.map(o => <option key={o} value={o}>{o}</option>)}
                       </select>
+                      {formData.secondPartyRole === 'ملء يدوي' && (
+                        <input 
+                          type="text" 
+                          className={`${inputClass} mt-2 border-blue-400 animate-in slide-in-from-top-2`} 
+                          placeholder="اكتب صفة الخصم هنا..." 
+                          value={formData.customSecondPartyRole} 
+                          onChange={e => setFormData({...formData, customSecondPartyRole: e.target.value})} 
+                        />
+                      )}
                     </div>
                     <div className="flex flex-col">
                       <label className={labelClass}>عنوان الخصم</label>
@@ -660,7 +729,25 @@ const App: React.FC = () => {
                   <label className={labelClass}>الجهة (لدى...)</label>
                   <input type="text" className={inputClass} placeholder="مثال: اسم المحكمة أو النيابة أو القسم" value={formData.policeStation} onChange={e => setFormData({...formData, policeStation: e.target.value})} />
                 </div>
-                <div className="flex flex-col"><label className={labelClass}>المسؤول</label><select className={inputClass} value={formData.judgeTitle} onChange={e => setFormData({...formData, judgeTitle: e.target.value})}>{COURTS.concat(INVESTIGATION_OFFICES).map(c => <option key={c}>{c}</option>)}</select></div>
+                <div className="flex flex-col">
+                  <label className={labelClass}>المسؤول</label>
+                  <select 
+                    className={inputClass} 
+                    value={formData.judgeTitle} 
+                    onChange={e => setFormData({...formData, judgeTitle: e.target.value})}
+                  >
+                    {combinedOfficials.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  {formData.judgeTitle === 'ملء يدوي' && (
+                    <input 
+                      type="text" 
+                      className={`${inputClass} mt-2 border-blue-400 animate-in slide-in-from-top-2`} 
+                      placeholder="اكتب مسمى المسؤول هنا..." 
+                      value={formData.customJudgeTitle} 
+                      onChange={e => setFormData({...formData, customJudgeTitle: e.target.value})} 
+                    />
+                  )}
+                </div>
                 <div className="flex flex-col"><label className={labelClass}>رقم الدعوى</label><input type="text" className={inputClass} placeholder="مثال: 000 / 0000" value={formData.caseNumber} onChange={e => setFormData({...formData, caseNumber: e.target.value})} /></div>
                 <div className="flex flex-col"><label className={labelClass}>الموضوع</label><input type="text" className={`${inputClass} font-bold`} placeholder="مثال: موضوع الدعوى باختصار" value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})} /></div>
 

@@ -1,4 +1,3 @@
-
 import { Category, PetitionModel } from './types';
 
 export const COURTS = [
@@ -18,6 +17,12 @@ export const INVESTIGATION_OFFICES = [
   'وكيل اعلى النيابة',
   'رئيس النيابة العامة',
   'النائب العام'
+];
+
+export const REGISTRARS = [
+  'المسجل التجاري العام',
+  'مسجل اسماء الاعمال',
+  'مسجل الشركات'
 ];
 
 export const PETITION_MODELS: PetitionModel[] = [
@@ -106,7 +111,7 @@ export const PETITION_MODELS: PetitionModel[] = [
     id: 'crim-defamation',
     title: 'عريضة دعوى اشانة سمعة',
     category: Category.CRIMINAL,
-    contentTemplate: '1- ﺍﻟﻌﻼﻗﺔ ﺑﻴﻦ ﺍﻟﺸﺎﻛﻲ ﻭﺍﻟﻤﺘﻬﻢ .\n2 - ﺍﻟﻤﺸﻜﻮ ﺿﺪﻩ ﺫﻛﺮ ﻟﻠﺸﺎﻛﻲ ( ﺍﻷﻟﻔﺎﻅ) ﺃمام ﺟﻤﻊ ﻣﻦ ﺍﻟﻨﺎﺱ.\n3 ـ ﺍﻷﻓﻌﺎﻝ ﺗﻌﺘﺒﺮ ﻣﺨﺎﻟﻔﺔ ﻟﻨﺺ ﺍﻟﻤﺎﺩﺓ (159) ﻣﻦ ﺍﻟﻘﺎﻧﻮﻥ ﺍﻟﺠﻨﺎﺋﻲ.\n4 - ﻳﻠﺘﻤﺲ ﺍﻟﺸﺎﻛﻲ ﻓﺘﺢ ﺑﻼﻍ.'
+    contentTemplate: '1- ﺍﻟﻌﻼﻗﺔ ﺑﻴﻦ ﺍﻟﺸﺎﻛﻲ ﻭﺍﻟﻤﺘﻬﻢ .\n2 - ﺍﻟﻤﺸﻜﻮ ﺿﺪﻩ ﺫﻛﺮ ﻟﻠﺸﺎﻛﻲ ( ﺍﻷﻟﻔﺎﻅ) ﺃمام ﺟﻤﻊ ﻣﻦ ﺍﻟﻨﺎ스가.\n3 ـ ﺍﻷﻓﻌﺎﻝ ﺗﻌﺘﺒﺮ ﻣﺨﺎﻟﻔﺔ ﻟﻨﺺ ﺍﻟﻤﺎﺩﺓ (159) ﻣﻦ ﺍﻟﻘﺎﻧﻮﻥ ﺍﻟﺠﻨﺎﺋﻲ.\n4 - ﻳﻠﺘﻤﺲ ﺍﻟﺸﺎﻛﻲ ﻓﺘﺢ ﺑﻼﻍ.'
   },
   {
     id: 'crim-injury',
@@ -118,7 +123,7 @@ export const PETITION_MODELS: PetitionModel[] = [
     id: 'crim-false',
     title: 'عريضة دعوى اتهام كاذب',
     category: Category.CRIMINAL,
-    contentTemplate: '1. ﺍﻟﻤﺸﻜﻮ ﺿﺪﻩ ﻗﺎﻡ ﺑﻔﺘﺢ ﺩﻋﻮى ﺟﻨﺎﺋﻲ بالرقم ( ) ﻭﺻﺪﺭ ﺣﻜﻢ ﺑﺸﻄﺐ ﺍﻟﺘﻬﻤﺔ.\n2. ﻃﺎﻟﺐ ﺍﻟﺸﺎﻛﻲ ﺍﻟﻤﺤﻜﻤﺔ ﺑﺈﻋﻄﺎﺋﻪ ﺍﻹﺫﻥ (ﻣﺮﻓﻖ).\n3. تضرر ﺍﻟﺸﺎﻛﻲ ﻣﺎﺩﻳﺎ ﻭﻣﻌﻨويﺎ.\n4. ﻳﻠﺘﻤﺲ ﺍﻟﺸﺎﻛﻲ فتح بلاغ تحت المادة (114) والتعويض.'
+    contentTemplate: '1. ﺍﻟﻤﺸﻜﻮ ﺿﺪﻩ ﻗﺎﻡ ﺑﻔﺘﺢ ﺩﻋﻮى ﺟﻨﺎﺋي بالرقم ( ) ﻭﺻﺪﺭ ﺣﻜﻢ ﺑﺸﻄﺐ ﺍﻟﺘﻬﻤﺔ.\n2. ﻃﺎﻟﺐ ﺍﻟﺸﺎﻛﻲ ﺍﻟﻤﺤﻜﻤﺔ ﺑﺈﻋﻄﺎﺋﻪ ﺍﻹﺫﻥ (ﻣﺮﻓﻖ).\n3. تضرر ﺍﻟﺸﺎﻛﻲ ﻣﺎﺩﻳﺎ ﻭﻣﻌﻨويﺎ.\n4. ﻳﻠﺘﻤﺲ ﺍﻟﺸﺎﻛﻲ فتح بلاغ تحت المادة (114) والتعويض.'
   },
 
   // --- الأحوال الشخصية ---
@@ -336,7 +341,7 @@ export const PETITION_MODELS: PetitionModel[] = [
   },
   {
     id: 'civ-evict-sub',
-    title: 'عريضة دعوى ﺇﺧﻼﺀ للاﻳﺠﺎﺭﺓ ﻣﻦ ﺍﻟﺒﺎﻃﻦ',
+    title: 'عريضة دعوى ﺇﺧﻼﺀ للاﻳيجﺎﺭﺓ ﻣﻦ ﺍﻟﺒﺎﻃﻦ',
     category: Category.CIVIL,
     contentTemplate: '1 . المستأجر أجر العقار من الباطن دون علم المالك.\n2 . ﻳﻠﺘﻤﺲ الحكم بالإخلاء للطرفين.'
   },

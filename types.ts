@@ -1,4 +1,3 @@
-
 export enum Category {
   GENERAL = 'عام',
   CIVIL = 'مدني',
@@ -33,6 +32,7 @@ export interface FormData {
   prosecutor: string;
   courtName: string;
   judgeTitle: string;
+  customJudgeTitle: string;
   caseNumber: string;
   subject: string;
   body: string;

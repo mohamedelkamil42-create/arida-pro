@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -47,26 +46,55 @@
             filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.1));
         }
 
-        /* حركة اللمعان الخفيفة */
-        @keyframes shine {
-            0% { opacity: 0.8; filter: brightness(1); }
-            50% { opacity: 1; filter: brightness(1.4) drop-shadow(0 0 8px rgba(59, 130, 246, 0.3)); }
-            100% { opacity: 0.8; filter: brightness(1); }
-        }
-
-        /* حركة نبض المربعات */
-        @keyframes box-pulse {
+        /* حركة النبض التفاعلية المستمرة عند التمرير */
+        @keyframes hover-pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
 
-        .shine-effect {
-            animation: shine 3s ease-in-out infinite;
+        /* حركة الومضة القوية والمكثفة */
+        @keyframes shine-glow {
+            0% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateX(250%) skewX(-20deg); opacity: 0; }
         }
 
-        .trigger-pulse {
-            animation: box-pulse 0.8s ease-in-out;
+        /* أنيميشن جذب الانتباه عند الظهور */
+        @keyframes attract-attention {
+            0% { transform: scale(0.6) translateY(50px); opacity: 0; filter: blur(10px); }
+            60% { transform: scale(1.08) translateY(-10px); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        /* حاوية الدخول لمنع تداخل الأنيميشن */
+        .entrance-wrapper {
+            opacity: 0;
+            animation: attract-attention 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        /* تطبيق النبض على الزر عند التمرير */
+        .category-button:hover {
+            animation: hover-pulse 1.2s ease-in-out infinite;
+            z-index: 20;
+        }
+
+        /* طبقة الومضة المكثفة */
+        .shine-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transform: skewX(-20deg);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .category-button:hover .shine-overlay {
+            animation: shine-glow 1s infinite;
         }
 
         /* تنسيقات مخصصة للتصدير فقط تمنع الانحراف */
@@ -115,14 +143,12 @@
             }
         }
     </style>
-    <script type="importmap">
+<script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@19.0.0",
-    "react-dom": "https://esm.sh/react-dom@19.0.0",
-    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
   }
 }
 </script>
