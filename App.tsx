@@ -1,19 +1,11 @@
-
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Category, PetitionModel, FormData as IFormData } from './types.ts';
+import { Category, PetitionModel, FormData as IFormData, SavedPetition } from './types.ts';
 import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, FOOTER_LINKS, SOCIAL_LINKS } from './constants.ts';
-
-// تعريف واجهة المسودات المحفوظة
-interface SavedPetition {
-  id: string;
-  timestamp: number;
-  data: IFormData;
-}
 
 // --- Modern SVG Icons Components ---
 
 const GeneralIcon = () => (
-  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-14 h-14 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
     <path d="M14 2v6h6" />
     <path d="M16 13H8" />
@@ -23,7 +15,7 @@ const GeneralIcon = () => (
 );
 
 const CivilIcon = () => (
-  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-14 h-14 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 16s3-2 3-5a7 7 0 1 0-14 0c0 3 3 5 3 5" />
     <path d="M5 20h14" />
     <path d="M12 9v4" />
@@ -32,7 +24,7 @@ const CivilIcon = () => (
 );
 
 const CriminalIcon = () => (
-  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-14 h-14 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     <path d="M12 8v4" />
     <path d="M12 16h.01" />
@@ -40,7 +32,7 @@ const CriminalIcon = () => (
 );
 
 const PersonalIcon = () => (
-  <svg className="w-8 h-8 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-14 h-14 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M3 21v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2" />
     <circle cx="9" cy="7" r="4" />
     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
@@ -49,6 +41,13 @@ const PersonalIcon = () => (
 );
 
 // --- Action Icons for Buttons ---
+
+const SearchIcon = () => (
+  <svg className="w-6 h-6 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+);
 
 const PreviewIcon = () => (
   <svg className="w-5 h-5 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -99,6 +98,13 @@ const TrashIcon = () => (
   </svg>
 );
 
+const EditIcon = () => (
+  <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+  </svg>
+);
+
 const HistoryIcon = () => (
   <svg className="w-6 h-6 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="10" />
@@ -144,6 +150,7 @@ const App: React.FC = () => {
   const [triggerPulse, setTriggerPulse] = useState(0);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [savedPetitions, setSavedPetitions] = useState<SavedPetition[]>([]);
+  
   const searchRef = useRef<HTMLDivElement>(null);
   const categoryListRef = useRef<HTMLDivElement>(null);
 
@@ -188,7 +195,7 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Sync saved petitions to localStorage
+  // Sync to localStorage
   useEffect(() => {
     localStorage.setItem('meelawfirm_saved_v1', JSON.stringify(savedPetitions));
   }, [savedPetitions]);
@@ -273,10 +280,17 @@ const App: React.FC = () => {
   };
 
   const handleDeleteSaved = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
     e.stopPropagation();
-    if (confirm("هل تريد بالتأكيد حذف هذه العريضة؟")) {
+    if (window.confirm("سيتم حذف هذه العريضة نهائياً من مكتبتك. هل أنت متأكد؟")) {
       setSavedPetitions(prev => prev.filter(p => p.id !== id));
     }
+  };
+
+  const handleEditSaved = (e: React.MouseEvent, petition: SavedPetition) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleLoadSaved(petition);
   };
 
   const handlePrint = () => {
@@ -317,10 +331,6 @@ const App: React.FC = () => {
     link.href = url;
     link.download = fileName;
     link.click();
-  };
-
-  const toArabicDigits = (num: number | string) => {
-    return num.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[parseInt(d)]);
   };
 
   const getEffectivePartyRole = (role: string, custom: string) => role === 'أخرى' ? custom : role;
@@ -388,26 +398,6 @@ const App: React.FC = () => {
                   <p className="text-[14pt] font-bold">التوقيع</p>
                </div>
             </div>
-            {(formData.witnesses.trim() || formData.documents.trim()) && (
-              <div className="mt-4 border-t border-black/10 pt-4 text-right">
-                {formData.witnesses.trim() && (
-                  <div className="mb-4">
-                    <p className="font-bold underline text-[14pt] mb-1">الشهود:</p>
-                    <div>
-                      {formData.witnesses.split(/[\n,]+/).filter(w => w.trim()).map((w, idx) => (
-                        <p key={idx} className="text-[14pt]">{toArabicDigits(idx + 1)}. {w.trim()}</p>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {formData.documents.trim() && (
-                  <div className="mt-2">
-                    <p className="font-bold underline text-[14pt] mb-1">المستندات المرفقة:</p>
-                    <p className="text-[14pt] opacity-80">{formData.documents}</p>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -422,7 +412,7 @@ const App: React.FC = () => {
     return (
       <div className={`flex items-center gap-2 md:gap-5 ${className}`}>
           <span className="h-px w-4 md:w-16 bg-blue-300"></span>
-          <p className="text-sm md:text-2xl font-bold text-blue-600 whitespace-nowrap py-2 shine-effect">
+          <p className="text-sm md:text-2xl font-bold text-blue-600 whitespace-nowrap py-2">
             محرر العرائض والطلبات
           </p>
           <span className="h-px w-4 md:w-16 bg-blue-300"></span>
@@ -460,7 +450,7 @@ const App: React.FC = () => {
       <header className="bg-white/95 backdrop-blur-lg py-4 md:py-6 sticky top-0 z-50 px-4 no-print border-b border-gray-100">
         <div className="container mx-auto flex flex-col items-center">
             <button onClick={goHome} className="flex flex-col items-center group transition-transform hover:scale-105 active:scale-95">
-                <h1 className="text-3xl md:text-5xl font-black text-emerald-600 drop-shadow-sm group-hover:text-emerald-500 transition-colors tracking-tight">MEELAWFIRM</h1>
+                <h1 className="text-4xl md:text-5xl font-black text-emerald-600 drop-shadow-sm group-hover:text-emerald-500 transition-colors tracking-tight">MEELAWFIRM</h1>
                 <DecoratedSubtitle className="mt-2 md:mt-3" />
             </button>
         </div>
@@ -474,14 +464,19 @@ const App: React.FC = () => {
             </div>
 
             <div ref={searchRef} className="max-w-3xl mx-auto w-full relative no-print z-40">
-              <input
-                type="text"
-                placeholder="ابحث عن العريضة المطلوبة... (مثال: دعوى إخلاء، مطالبة مالية، نفقة)"
-                className="w-full p-4 md:p-6 pr-12 md:pr-14 rounded-[1.5rem] md:rounded-[2rem] border-2 border-gray-100 outline-none shadow-xl text-lg md:text-xl text-right focus:border-blue-400 transition-all focus:ring-4 focus:ring-blue-50"
-                value={searchQuery}
-                onFocus={() => setIsSearchFocused(true)}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="ابحث عن العريضة المطلوبة... (مثال: دعوى إخلاء، مطالبة مالية، نفقة)"
+                  className="w-full p-4 md:p-6 pr-12 md:pr-14 rounded-[1.5rem] md:rounded-[2rem] border-2 border-gray-100 outline-none shadow-xl text-lg md:text-xl text-right focus:border-blue-400 transition-all focus:ring-4 focus:ring-blue-50"
+                  value={searchQuery}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <div className="absolute right-4 md:right-6 top-1/2 -translate-y-1/2 text-slate-400">
+                  <SearchIcon />
+                </div>
+              </div>
               {isSearchFocused && searchQuery.trim() && (
                 <div className="absolute top-full left-0 right-0 bg-white shadow-2xl rounded-[1.5rem] md:rounded-[2rem] mt-2 overflow-hidden z-50 border border-gray-100 animate-in zoom-in-95 duration-200">
                     {filteredModels.map(model => (
@@ -494,23 +489,23 @@ const App: React.FC = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 max-w-6xl mx-auto w-full no-print">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-6xl mx-auto w-full no-print px-1">
               {categories.map((item, idx) => (
                 <button
                   key={`${item.id}-${triggerPulse}`}
                   onClick={() => handleCategoryClick(item.id as Category)}
-                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-4 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center aspect-square w-full active:scale-95 trigger-pulse`}
+                  className={`group relative bg-gradient-to-br ${item.gradient} text-white p-8 md:p-10 rounded-[1.5rem] md:rounded-[2rem] shadow-lg hover:-translate-y-1 transition-all flex flex-col items-center justify-center text-center aspect-square w-full active:scale-95 trigger-pulse`}
                   style={{ animationDelay: `${idx * 0.1}s` }}
                 >
-                  <div className="mb-2 md:mb-4">{item.icon}</div>
-                  <span className="text-[11px] md:text-2xl font-bold leading-tight px-1">
+                  <div className="mb-6 md:mb-6">{item.icon}</div>
+                  <span className="text-2xl md:text-2xl font-bold leading-tight px-1">
                     {item.title}
                   </span>
                 </button>
               ))}
             </div>
 
-            {/* --- Saved Petitions Dropdown Section --- */}
+            {/* --- Saved Petitions Section --- */}
             <div className="max-w-6xl mx-auto w-full no-print mt-2">
                <button 
                 onClick={() => setIsHistoryOpen(!isHistoryOpen)}
@@ -526,14 +521,14 @@ const App: React.FC = () => {
                {isHistoryOpen && (
                  <div className="bg-white border-x-2 border-b-2 border-slate-100 rounded-b-[1.5rem] p-4 md:p-8 shadow-inner animate-in slide-in-from-top-4 duration-300">
                     {savedPetitions.length === 0 ? (
-                      <p className="text-center text-slate-400 font-bold py-8">لا توجد مسودات محفوظة حتى الآن.</p>
+                      <p className="text-center text-slate-400 font-bold py-8">لا توجد عرائض محفوظة حالياً.</p>
                     ) : (
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {savedPetitions.map(petition => (
                           <div 
                             key={petition.id} 
                             onClick={() => handleLoadSaved(petition)}
-                            className="p-5 border-2 border-slate-50 rounded-2xl hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all group relative flex flex-col justify-between h-40"
+                            className="p-5 border-2 border-slate-50 rounded-2xl hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all group relative flex flex-col justify-between h-44 shadow-sm"
                           >
                              <div>
                                <h3 className="font-bold text-slate-800 group-hover:text-blue-700 leading-snug mb-1 line-clamp-2">{petition.data.subject || 'بدون عنوان'}</h3>
@@ -541,13 +536,22 @@ const App: React.FC = () => {
                              </div>
                              <div className="flex justify-between items-center mt-4">
                                <span className="text-[9px] bg-slate-100 px-2 py-1 rounded-full font-bold text-slate-500 uppercase">{petition.data.partyRole}</span>
-                               <button 
-                                onClick={(e) => handleDeleteSaved(e, petition.id)}
-                                className="p-2 hover:bg-red-50 rounded-full transition-all group/trash"
-                                title="حذف"
-                               >
-                                <TrashIcon />
-                               </button>
+                               <div className="flex gap-2">
+                                 <button 
+                                  onClick={(e) => handleEditSaved(e, petition)}
+                                  className="p-2 hover:bg-blue-100 rounded-full transition-all text-blue-600"
+                                  title="تعديل"
+                                 >
+                                  <EditIcon />
+                                 </button>
+                                 <button 
+                                  onClick={(e) => handleDeleteSaved(e, petition.id)}
+                                  className="p-2 hover:bg-red-50 rounded-full transition-all text-red-500"
+                                  title="حذف نهائي"
+                                 >
+                                  <TrashIcon />
+                                 </button>
+                               </div>
                              </div>
                           </div>
                         ))}
@@ -649,7 +653,7 @@ const App: React.FC = () => {
 
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>بيان إضافي (يظهر بعد أسماء الأطراف)</label>
-                  <input type="text" className={inputClass} placeholder="مثال: بصفته ولياً طبيعياً عن القاصر..." value={formData.additionalStatement} onChange={e => setFormData({...formData, additionalStatement: e.target.value})} />
+                  <input type="text" className={inputClass} placeholder="مثال: اسم المتحري أو رقم استئناف" value={formData.additionalStatement} onChange={e => setFormData({...formData, additionalStatement: e.target.value})} />
                 </div>
 
                 <div className="flex flex-col">
@@ -719,7 +723,7 @@ const App: React.FC = () => {
       <footer className="bg-slate-50 py-8 md:py-10 px-4 no-print border-t border-slate-200 mt-auto text-slate-800">
         <div className="container mx-auto max-w-6xl text-center flex flex-col items-center">
           <button onClick={scrollToTop} className="group transition-transform hover:-translate-y-1 active:scale-95 mb-4">
-            <h2 className="text-lg md:text-xl font-bold text-blue-600 group-hover:text-blue-500 transition-colors">MEELAWFIRM</h2>
+            <h2 className="text-lg md:text-xl font-bold text-emerald-600 group-hover:text-emerald-500 transition-colors">MEELAWFIRM</h2>
           </button>
           <div className="flex justify-center items-center gap-3 md:gap-4 mb-4 flex-wrap">
             <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="group p-2 md:p-2.5 bg-gradient-to-br from-red-600 to-red-700 text-white rounded-full shadow-md hover:-translate-y-1 hover:shadow-red-500/20 transition-all duration-300 flex items-center justify-center aspect-square">
@@ -737,7 +741,7 @@ const App: React.FC = () => {
           </div>
           <div className="flex justify-center gap-4 md:gap-6 text-[8px] md:text-[10px] text-slate-500 font-bold mb-6 flex-wrap max-w-2xl px-2">
             {FOOTER_LINKS.map(l => (
-              <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors border-b border-transparent hover:border-blue-600 pb-0.5">
+              <a key={l.name} href={l.url} target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors border-b border-transparent hover:border-blue-600 pb-0.5 font-bold">
                 {l.name}
               </a>
             ))}
