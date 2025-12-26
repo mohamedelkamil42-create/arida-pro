@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Category, PetitionModel, PetitionFormData, SavedPetition } from './types.ts';
-import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, REGISTRARS, FOOTER_LINKS, SOCIAL_LINKS } from './constants.ts';
+import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, REGISTRARS, FOOTER_LINKS, SOCIAL_LINKS, AVAILABLE_FONTS, FontOption } from './constants.ts';
 
 // Declare html2pdf globally to ensure type safety and stability
 declare var html2pdf: any;
@@ -33,7 +33,9 @@ const INITIAL_FORM_DATA: PetitionFormData = {
   witnesses: '',
   documents: '',
   extraDetails: '',
-  additionalStatement: ''
+  additionalStatement: '',
+  fontFamily: 'Traditional Arabic',
+  customFontUrl: ''
 };
 
 // --- Modern SVG Icons Components ---
@@ -146,6 +148,14 @@ const HistoryIcon = () => (
   </svg>
 );
 
+const FontIcon = () => (
+    <svg className="w-5 h-5 ml-2 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 7V4h16v3" />
+        <path d="M9 20h6" />
+        <path d="M12 4v16" />
+    </svg>
+);
+
 // --- Social Icons ---
 
 const YouTubeIcon = () => (
@@ -190,6 +200,37 @@ const App: React.FC = () => {
 
   // Initialize with the safe constant
   const [formData, setFormData] = useState<PetitionFormData>(INITIAL_FORM_DATA);
+
+  // Font Injection Logic
+  useEffect(() => {
+    // 1. Identify which font is selected
+    const selectedFont = AVAILABLE_FONTS.find(f => f.value === formData.fontFamily);
+    
+    // 2. Determine the URL (either from predefined list or custom input)
+    let urlToLoad = '';
+    
+    if (formData.fontFamily === 'Custom') {
+        urlToLoad = formData.customFontUrl;
+    } else if (selectedFont && selectedFont.url) {
+        urlToLoad = selectedFont.url;
+    }
+
+    // 3. Inject the link tag if URL exists and not already loaded
+    if (urlToLoad && urlToLoad.trim() !== '') {
+        try {
+            // Check if this specific URL is already loaded
+            const existingLink = document.querySelector(`link[href="${urlToLoad}"]`);
+            if (!existingLink) {
+                const link = document.createElement('link');
+                link.href = urlToLoad;
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            }
+        } catch (error) {
+            console.error("Failed to load font:", error);
+        }
+    }
+  }, [formData.fontFamily, formData.customFontUrl]);
 
   // Load saved petitions on component mount
   useEffect(() => {
@@ -335,7 +376,9 @@ const App: React.FC = () => {
     const content = document.getElementById('preview-inner')?.innerHTML || document.getElementById('printable-document-content')?.innerHTML;
     if (!content) return;
     const fileName = formData.subject ? `${formData.subject}.doc` : 'عريضة_قانونية.doc';
-    const styles = `<style>body{font-family:'Traditional Arabic',serif;direction:rtl;text-align:right;padding:1in;line-height:1.2;}.text-center{text-align:center;}.font-bold{font-weight:bold;}.underline{text-decoration:underline;}p,div{font-size:16pt;}</style>`;
+    // Dynamically inject the font family into the Word document styles
+    const fontName = formData.fontFamily === 'Custom' ? 'Traditional Arabic' : formData.fontFamily;
+    const styles = `<style>body{font-family:'${fontName}', 'Traditional Arabic', serif;direction:rtl;text-align:right;padding:1in;line-height:1.2;}.text-center{text-align:center;}.font-bold{font-weight:bold;}.underline{text-decoration:underline;}p,div{font-size:16pt;}</style>`;
     const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' lang="ar" dir="rtl"><head><meta charset='utf-8'>${styles}</head><body lang="AR-SA" dir="RTL">`;
     const footer = "</body></html>";
     const sourceHTML = header + content + footer;
@@ -372,9 +415,19 @@ const App: React.FC = () => {
     }
     
     const displayJudgeTitle = formData.judgeTitle === 'ملء يدوي' ? formData.customJudgeTitle : formData.judgeTitle;
+    
+    // Apply Font Family
+    // If Custom, we rely on the injected style but fallback to Traditional Arabic if fails
+    const fontStyle = { 
+        fontFamily: formData.fontFamily === 'Custom' ? 'inherit' : `"${formData.fontFamily}", "Traditional Arabic", serif`
+    };
 
     return (
-      <div id={id} className={`pdf-export-container petition-font ${isPreview ? 'shadow-2xl mx-auto' : ''}`}>
+      <div id={id} className={`pdf-export-container ${isPreview ? 'shadow-2xl mx-auto' : ''}`} style={fontStyle}>
+        {formData.fontFamily === 'Custom' && formData.customFontUrl && (
+             <style>{`@import url('${formData.customFontUrl}'); .pdf-export-container { font-family: 'CustomFont', sans-serif; }`}</style>
+        )}
+        
         <div className="pdf-content-wrapper">
           <div className="text-center font-bold text-[16pt] mb-1">لدى {formData.policeStation || '....................'}</div>
           
@@ -658,6 +711,44 @@ const App: React.FC = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                {/* --- Font Settings Section --- */}
+                <div className="md:col-span-2 bg-indigo-50/30 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] border border-indigo-100 mb-2">
+                    <div className="flex items-center gap-2 mb-4">
+                        <FontIcon />
+                        <h3 className="text-lg font-bold text-indigo-800">تنسيق المستند ونوع الخط</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div className="flex flex-col">
+                            <label className={labelClass}>نوع الخط</label>
+                            <select 
+                                className={inputClass} 
+                                value={formData.fontFamily} 
+                                onChange={e => setFormData({...formData, fontFamily: e.target.value})}
+                            >
+                                {AVAILABLE_FONTS.map(font => (
+                                    <option key={font.value} value={font.value}>{font.name}</option>
+                                ))}
+                                <option value="Custom">استيراد خط مخصص (Google Fonts)</option>
+                            </select>
+                        </div>
+                        {formData.fontFamily === 'Custom' && (
+                             <div className="flex flex-col animate-in slide-in-from-top-2">
+                                <label className={labelClass}>رابط الخط (Google Fonts URL)</label>
+                                <input 
+                                    type="text" 
+                                    dir="ltr"
+                                    className={`${inputClass} text-left placeholder:text-right`} 
+                                    placeholder="https://fonts.googleapis.com/css2?family=Example&display=swap" 
+                                    value={formData.customFontUrl} 
+                                    onChange={e => setFormData({...formData, customFontUrl: e.target.value})} 
+                                />
+                                <p className="text-xs text-slate-500 mt-1 mr-1">انسخ رابط CSS من Google Fonts وضعه هنا.</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
                 <div className="flex flex-col">
                   <label className={labelClass}>صفة المحرر (محامي أم مقدم طلب)</label>
                   <select className={inputClass} value={formData.userRole} onChange={e => setFormData({...formData, userRole: e.target.value as any})}>

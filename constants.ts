@@ -25,6 +25,26 @@ export const REGISTRARS = [
   'مسجل الشركات'
 ];
 
+export interface FontOption {
+  name: string;
+  value: string; // The font-family name used in CSS
+  url?: string;  // The Google Fonts URL (optional for system fonts)
+}
+
+export const AVAILABLE_FONTS: FontOption[] = [
+  { name: 'الخط التقليدي (System)', value: 'Traditional Arabic', url: '' },
+  { name: 'نسخ (Noto Naskh)', value: 'Noto Naskh Arabic', url: 'https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap' },
+  { name: 'أميري (Amiri)', value: 'Amiri', url: 'https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap' },
+  { name: 'كايرو (Cairo)', value: 'Cairo', url: 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap' },
+  { name: 'تجوال (Tajawal)', value: 'Tajawal', url: 'https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap' },
+  { name: 'المسيري (El Messiri)', value: 'El Messiri', url: 'https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;600;700&display=swap' },
+  { name: 'كوفي (Noto Kufi)', value: 'Noto Kufi Arabic', url: 'https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700&display=swap' },
+  { name: 'إيبم (IBM Plex)', value: 'IBM Plex Sans Arabic', url: 'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap' },
+  { name: 'مراعي (Almarai)', value: 'Almarai', url: 'https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap' },
+  { name: 'اريال (Arial)', value: 'Arial', url: '' },
+  { name: 'تايمز (Times New Roman)', value: 'Times New Roman', url: '' },
+];
+
 export const PETITION_MODELS: PetitionModel[] = [
   // --- العريضة العامة ---
   {

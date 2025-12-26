@@ -42,6 +42,9 @@ export interface PetitionFormData {
   documents: string;
   extraDetails: string;
   additionalStatement: string;
+  // Font Settings
+  fontFamily: string;
+  customFontUrl: string;
 }
 
 export interface SavedPetition {
