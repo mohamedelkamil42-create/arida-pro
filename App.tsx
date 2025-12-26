@@ -1,6 +1,40 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Category, PetitionModel, FormData as IFormData, SavedPetition } from './types.ts';
+import { Category, PetitionModel, PetitionFormData, SavedPetition } from './types.ts';
 import { PETITION_MODELS, COURTS, INVESTIGATION_OFFICES, REGISTRARS, FOOTER_LINKS, SOCIAL_LINKS } from './constants.ts';
+
+// Declare html2pdf globally to ensure type safety and stability
+declare var html2pdf: any;
+
+// Define initial state constant for stability and clean resets
+const INITIAL_FORM_DATA: PetitionFormData = {
+  userRole: 'محامي',
+  lawyerName: '',
+  partyRole: 'مقدم الطلب',
+  customPartyRole: '',
+  secondPartyRole: 'المشكو ضده',
+  customSecondPartyRole: '',
+  applicantName: '',
+  applicantAddress: '',
+  applicantPhone: '',
+  defendantName: '',
+  defendantAddress: '',
+  defendantPhone: '',
+  policeStation: '',
+  investigator: '',
+  prosecutor: '',
+  courtName: '',
+  judgeTitle: 'ملء يدوي',
+  customJudgeTitle: '',
+  caseNumber: '',
+  subject: '',
+  body: '',
+  requests: '',
+  fees: '',
+  witnesses: '',
+  documents: '',
+  extraDetails: '',
+  additionalStatement: ''
+};
 
 // --- Modern SVG Icons Components ---
 
@@ -154,35 +188,8 @@ const App: React.FC = () => {
   const searchRef = useRef<HTMLDivElement>(null);
   const categoryListRef = useRef<HTMLDivElement>(null);
 
-  const [formData, setFormData] = useState<IFormData>({
-    userRole: 'محامي',
-    lawyerName: '',
-    partyRole: 'مقدم الطلب',
-    customPartyRole: '',
-    secondPartyRole: 'المشكو ضده',
-    customSecondPartyRole: '',
-    applicantName: '',
-    applicantAddress: '',
-    applicantPhone: '',
-    defendantName: '',
-    defendantAddress: '',
-    defendantPhone: '',
-    policeStation: '',
-    investigator: '',
-    prosecutor: '',
-    courtName: '',
-    judgeTitle: 'ملء يدوي',
-    customJudgeTitle: '',
-    caseNumber: '',
-    subject: '',
-    body: '',
-    requests: '',
-    fees: '',
-    witnesses: '',
-    documents: '',
-    extraDetails: '',
-    additionalStatement: ''
-  });
+  // Initialize with the safe constant
+  const [formData, setFormData] = useState<PetitionFormData>(INITIAL_FORM_DATA);
 
   // Load saved petitions on component mount
   useEffect(() => {
@@ -223,6 +230,8 @@ const App: React.FC = () => {
     setActiveCategory(null);
     setSearchQuery('');
     setTriggerPulse(prev => prev + 1);
+    // Reset to initial clean state
+    setFormData(INITIAL_FORM_DATA);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -274,7 +283,12 @@ const App: React.FC = () => {
   };
 
   const handleLoadSaved = (petition: SavedPetition) => {
-    setFormData(petition.data);
+    // Stability Fix: Merge with INITIAL_FORM_DATA to ensure all fields exist 
+    // even if the saved petition is from an older version of the schema
+    setFormData({
+      ...INITIAL_FORM_DATA,
+      ...petition.data
+    });
     setIsEditing(true);
     setIsHistoryOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -310,7 +324,6 @@ const App: React.FC = () => {
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     try {
-      // @ts-ignore
       await html2pdf().set(opt).from(element).save();
     } catch (error) {
       console.error("PDF Export Error:", error);

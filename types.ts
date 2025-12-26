@@ -14,7 +14,7 @@ export interface PetitionModel {
   defaultArticle?: string;
 }
 
-export interface FormData {
+export interface PetitionFormData {
   userRole: 'محامي' | 'مقدم الطلب بنفسه';
   lawyerName: string;
   partyRole: string;
@@ -47,5 +47,5 @@ export interface FormData {
 export interface SavedPetition {
   id: string;
   timestamp: number;
-  data: FormData;
+  data: PetitionFormData;
 }
