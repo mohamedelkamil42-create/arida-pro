@@ -69,7 +69,7 @@ const CriminalIcon = () => (
 
 const PersonalIcon = () => (
   <svg className="w-14 h-14 md:w-16 md:h-16 transition-transform duration-500 group-hover:scale-110" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 21v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2" />
+    <path d="M3 21v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2" />
     <circle cx="9" cy="7" r="4" />
     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     <path d="M19 21v-2a4 4 0 0 0-3-3.87" />
@@ -195,18 +195,27 @@ const App: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [savedPetitions, setSavedPetitions] = useState<SavedPetition[]>([]);
   
+  // Selection Menu State
+  const [selectionMenu, setSelectionMenu] = useState<{show: boolean, x: number, y: number, field: 'body' | 'requests' | null}>({
+    show: false,
+    x: 0,
+    y: 0,
+    field: null
+  });
+
   const searchRef = useRef<HTMLDivElement>(null);
   const categoryListRef = useRef<HTMLDivElement>(null);
+  
+  // Refs for text areas to insert formatting
+  const bodyRef = useRef<HTMLTextAreaElement>(null);
+  const requestsRef = useRef<HTMLTextAreaElement>(null);
 
   // Initialize with the safe constant
   const [formData, setFormData] = useState<PetitionFormData>(INITIAL_FORM_DATA);
 
   // Font Injection Logic
   useEffect(() => {
-    // 1. Identify which font is selected
     const selectedFont = AVAILABLE_FONTS.find(f => f.value === formData.fontFamily);
-    
-    // 2. Determine the URL (either from predefined list or custom input)
     let urlToLoad = '';
     
     if (formData.fontFamily === 'Custom') {
@@ -215,10 +224,8 @@ const App: React.FC = () => {
         urlToLoad = selectedFont.url;
     }
 
-    // 3. Inject the link tag if URL exists and not already loaded
     if (urlToLoad && urlToLoad.trim() !== '') {
         try {
-            // Check if this specific URL is already loaded
             const existingLink = document.querySelector(`link[href="${urlToLoad}"]`);
             if (!existingLink) {
                 const link = document.createElement('link');
@@ -254,10 +261,15 @@ const App: React.FC = () => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsSearchFocused(false);
       }
+      
+      // Close selection menu if clicking elsewhere
+      if (selectionMenu.show && !(event.target as Element).closest('.floating-toolbar')) {
+          setSelectionMenu({ ...selectionMenu, show: false });
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [selectionMenu]);
 
   useEffect(() => {
     if (activeCategory && categoryListRef.current) {
@@ -271,8 +283,8 @@ const App: React.FC = () => {
     setActiveCategory(null);
     setSearchQuery('');
     setTriggerPulse(prev => prev + 1);
-    // Reset to initial clean state
     setFormData(INITIAL_FORM_DATA);
+    setSelectionMenu({ show: false, x: 0, y: 0, field: null });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -324,8 +336,6 @@ const App: React.FC = () => {
   };
 
   const handleLoadSaved = (petition: SavedPetition) => {
-    // Stability Fix: Merge with INITIAL_FORM_DATA to ensure all fields exist 
-    // even if the saved petition is from an older version of the schema
     setFormData({
       ...INITIAL_FORM_DATA,
       ...petition.data
@@ -357,12 +367,15 @@ const App: React.FC = () => {
     const element = document.getElementById('printable-document-content');
     if (!element) return;
     const fileName = formData.subject ? `${formData.subject}.pdf` : 'عريضة_قانونية.pdf';
+    
+    // Updated options for pagination and margins
     const opt = {
-      margin: 0,
+      margin: [20, 20, 25, 20], // Top, Left, Bottom, Right in mm (matches @page in CSS)
       filename: fileName,
       image: { type: 'jpeg', quality: 1.0 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', width: 794, windowWidth: 794, scrollY: 0, scrollX: 0, x: 0, y: 0 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
     try {
       await html2pdf().set(opt).from(element).save();
@@ -376,18 +389,82 @@ const App: React.FC = () => {
     const content = document.getElementById('preview-inner')?.innerHTML || document.getElementById('printable-document-content')?.innerHTML;
     if (!content) return;
     const fileName = formData.subject ? `${formData.subject}.doc` : 'عريضة_قانونية.doc';
-    // Dynamically inject the font family into the Word document styles
     const fontName = formData.fontFamily === 'Custom' ? 'Traditional Arabic' : formData.fontFamily;
+    // Add logic to handle bold/underline in Word export
+    const contentWithStyles = content.replace(/<b>/g, '<strong>').replace(/<\/b>/g, '</strong>').replace(/<u>/g, '<span style="text-decoration: underline;">').replace(/<\/u>/g, '</span>');
+
     const styles = `<style>body{font-family:'${fontName}', 'Traditional Arabic', serif;direction:rtl;text-align:right;padding:1in;line-height:1.2;}.text-center{text-align:center;}.font-bold{font-weight:bold;}.underline{text-decoration:underline;}p,div{font-size:16pt;}</style>`;
     const header = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40' lang="ar" dir="rtl"><head><meta charset='utf-8'>${styles}</head><body lang="AR-SA" dir="RTL">`;
     const footer = "</body></html>";
-    const sourceHTML = header + content + footer;
+    const sourceHTML = header + contentWithStyles + footer;
     const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
     link.download = fileName;
     link.click();
+  };
+
+  // Handle selection logic for the floating menu
+  const handleTextSelect = (e: React.MouseEvent<HTMLTextAreaElement>, field: 'body' | 'requests') => {
+      const target = e.target as HTMLTextAreaElement;
+      if (target.selectionStart !== target.selectionEnd) {
+          // Calculate approximate position (relative to viewport)
+          // Simple approach: position near the mouse click
+          setSelectionMenu({
+              show: true,
+              x: e.clientX,
+              y: e.clientY - 45, // Position slightly above cursor
+              field: field
+          });
+      } else {
+          setSelectionMenu({ ...selectionMenu, show: false });
+      }
+  };
+
+  // Helper function to insert formatting markers
+  const insertFormatting = (type: 'bold' | 'underline') => {
+    const field = selectionMenu.field;
+    if (!field) return;
+
+    const inputRef = field === 'body' ? bodyRef.current : requestsRef.current;
+    if (!inputRef) return;
+
+    const start = inputRef.selectionStart;
+    const end = inputRef.selectionEnd;
+    const text = formData[field];
+    
+    // Safety check
+    if (start === end) return;
+
+    const selectedText = text.substring(start, end);
+    
+    let marker = '';
+    if (type === 'bold') marker = '*';
+    if (type === 'underline') marker = '_';
+
+    const newText = text.substring(0, start) + marker + selectedText + marker + text.substring(end);
+    
+    setFormData(prev => ({ ...prev, [field]: newText }));
+    setSelectionMenu({ ...selectionMenu, show: false });
+    
+    // Restore focus and selection
+    setTimeout(() => {
+        inputRef.focus();
+        inputRef.setSelectionRange(start, end + (marker.length * 2)); // Adjust selection to include markers
+    }, 0);
+  };
+
+  const renderFormattedText = (text: string) => {
+    if (!text) return null;
+    let html = text
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#039;")
+      .replace(/\*(.*?)\*/g, '<b>$1</b>')
+      .replace(/_(.*?)_/g, '<u>$1</u>')
+      .replace(/\n/g, '<br/>');
+    
+    return <div dangerouslySetInnerHTML={{ __html: html }} className="petition-body content-break" />;
   };
 
   const getEffectivePartyRole = (role: string, custom: string) => role === 'ملء يدوي' ? custom : role;
@@ -405,7 +482,6 @@ const App: React.FC = () => {
     const effectiveRole = getEffectivePartyRole(formData.partyRole, formData.customPartyRole);
     const defendantRole = getEffectivePartyRole(formData.secondPartyRole, formData.customSecondPartyRole);
     
-    // منطق "صفة الموقع"
     const hasSpecificRole = effectiveRole && effectiveRole.trim() !== '';
     let signatureLabel = '';
     if (formData.userRole === 'محامي') {
@@ -416,8 +492,6 @@ const App: React.FC = () => {
     
     const displayJudgeTitle = formData.judgeTitle === 'ملء يدوي' ? formData.customJudgeTitle : formData.judgeTitle;
     
-    // Apply Font Family
-    // If Custom, we rely on the injected style but fallback to Traditional Arabic if fails
     const fontStyle = { 
         fontFamily: formData.fontFamily === 'Custom' ? 'inherit' : `"${formData.fontFamily}", "Traditional Arabic", serif`
     };
@@ -429,61 +503,62 @@ const App: React.FC = () => {
         )}
         
         <div className="pdf-content-wrapper">
-          <div className="text-center font-bold text-[16pt] mb-1">لدى {formData.policeStation || '....................'}</div>
+          <div className="text-center font-bold text-[16pt] mb-1 no-break">لدى {formData.policeStation || '....................'}</div>
           
           {formData.applicantName && (
-            <>
-              {/* تظهر "فيمابين" فقط إذا كان هناك خصم مذكور */}
+            <div className="no-break">
               {formData.defendantName && (
                 <div className="text-center font-bold text-[16pt] mb-1">فيمابين</div>
               )}
               <div className="text-center font-bold text-[16pt] mb-1">
                 {renderPartyDetailsLine(formData.applicantName, effectiveRole || 'مقدم الطلب', formData.applicantAddress, formData.applicantPhone)}
               </div>
-            </>
+            </div>
           )}
 
           {formData.defendantName && (
-            <>
-              {/* تظهر "ضد" فقط إذا تم ملء اسم الخصم */}
+            <div className="no-break">
               <div className="text-center font-bold text-[16pt] mb-1">ضد</div>
               <div className="text-center font-bold text-[16pt] mb-2">
                 {renderPartyDetailsLine(formData.defendantName, defendantRole || 'المشار إليه', formData.defendantAddress, formData.defendantPhone)}
               </div>
-            </>
+            </div>
           )}
 
           {formData.additionalStatement && (
-            <div className="text-center font-bold text-[16pt] mb-1">{formData.additionalStatement}</div>
+            <div className="text-center font-bold text-[16pt] mb-1 no-break">{formData.additionalStatement}</div>
           )}
 
           {formData.caseNumber && (
-            <div className="text-center font-bold border-y border-black/40 py-1 mb-2 text-[16pt]">رقم الدعوى: {formData.caseNumber}</div>
+            <div className="text-center font-bold border-y border-black/40 py-1 mb-2 text-[16pt] no-break">رقم الدعوى: {formData.caseNumber}</div>
           )}
 
-          <div className="text-center mb-4"><span className="font-bold underline text-[16pt]">الموضوع {formData.subject}</span></div>
-          <div className="mb-2 border-b border-black/10 pb-1">
+          <div className="text-center mb-4 no-break"><span className="font-bold underline text-[16pt]">الموضوع {formData.subject}</span></div>
+          <div className="mb-2 border-b border-black/10 pb-1 no-break">
             <div className="font-bold text-right text-[16pt]">السيد {displayJudgeTitle || '....................'}</div>
             <div className="font-bold text-center text-[16pt]">الموقر</div>
           </div>
-          <div className="text-center font-bold mb-2 text-[16pt]">بعد التحية والاحترام</div>
-          <div className="text-justify whitespace-pre-wrap text-[16pt] mb-6 flex-grow" style={{ lineHeight: '1.4' }}>
-            {formData.body}
+          <div className="text-center font-bold mb-2 text-[16pt] no-break">بعد التحية والاحترام</div>
+          
+          {/* Main Body Content - Allow Page Break */}
+          <div className="text-justify whitespace-pre-wrap text-[16pt] mb-6 flex-grow content-break" style={{ lineHeight: '1.4' }}>
+            {renderFormattedText(formData.body)}
+            
             {formData.requests && (
-              <div className="mt-4">
+              <div className="mt-4 content-break">
                 <p className="font-bold underline mb-1">الطلبات:</p>
-                <div className="pr-4">{formData.requests}</div>
+                <div className="pr-4">{renderFormattedText(formData.requests)}</div>
               </div>
             )}
             {formData.fees && (
-              <div className="mt-4 text-center">
+              <div className="mt-4 text-center no-break">
                 <p className="font-bold underline mb-1">الرسوم والأتعاب:</p>
                 <div className="font-bold">{formData.fees}</div>
               </div>
             )}
           </div>
           
-          <div className="mt-auto border-t border-black/10 pt-4">
+          <div className="mt-auto border-t border-black/10 pt-4 no-break">
             <div className="text-center font-bold text-[16pt] mb-4">ولعدالتكم وافر الاحترام والتقدير</div>
             <div className="flex w-full mb-6">
                <div className="text-center mr-auto ml-0 min-w-[200px]">
@@ -545,6 +620,20 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      {/* Floating Toolbar */}
+      {selectionMenu.show && (
+          <div 
+            className="floating-toolbar"
+            style={{ 
+                top: `${selectionMenu.y}px`, 
+                left: `${selectionMenu.x}px` 
+            }}
+          >
+              <button onClick={() => insertFormatting('bold')} title="خط عريض">B</button>
+              <button onClick={() => insertFormatting('underline')} title="تسطير">U</button>
+          </div>
+      )}
+
       <div style={{ position: 'absolute', right: '-10000px', top: '0', pointerEvents: 'none', zIndex: -100 }}>
         <PrintableDocument id="printable-document-content" />
       </div>
@@ -857,11 +946,30 @@ const App: React.FC = () => {
 
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>وقائع العريضة</label>
-                  <textarea rows={8} className={`${inputClass} text-xl leading-relaxed`} placeholder="اكتب وقائع وتفاصيل العريضة هنا..." value={formData.body} onChange={e => setFormData({...formData, body: e.target.value})} />
+                  <textarea 
+                    ref={bodyRef}
+                    rows={8} 
+                    className={`${inputClass} text-xl leading-relaxed`} 
+                    placeholder="اكتب وقائع وتفاصيل العريضة هنا... (ظلل النص لإظهار خيارات التنسيق)" 
+                    value={formData.body} 
+                    onChange={e => setFormData({...formData, body: e.target.value})}
+                    onMouseUp={(e) => handleTextSelect(e, 'body')}
+                    onKeyUp={(e) => handleTextSelect(e as any, 'body')}
+                  />
+                  <p className="text-xs text-slate-400 mt-1 mr-1">تلميح: ظلل النص لإظهار خيارات التنسيق (غامق/مسطر)</p>
                 </div>
                 <div className="md:col-span-2 flex flex-col">
-                  <label className={labelClass}>الطلبات</label>
-                  <textarea rows={3} className={inputClass} placeholder="مثال: نلتمس إلزام المدعى عليه بسداد المبلغ المذكور..." value={formData.requests} onChange={e => setFormData({...formData, requests: e.target.value})} />
+                   <label className={labelClass}>الطلبات</label>
+                  <textarea 
+                    ref={requestsRef}
+                    rows={3} 
+                    className={inputClass} 
+                    placeholder="مثال: نلتمس إلزام المدعى عليه بسداد المبلغ المذكور..." 
+                    value={formData.requests} 
+                    onChange={e => setFormData({...formData, requests: e.target.value})}
+                    onMouseUp={(e) => handleTextSelect(e, 'requests')}
+                    onKeyUp={(e) => handleTextSelect(e as any, 'requests')}
+                  />
                 </div>
                 <div className="md:col-span-2 flex flex-col">
                   <label className={labelClass}>الرسوم والأتعاب</label>

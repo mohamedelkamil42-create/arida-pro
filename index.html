@@ -24,6 +24,64 @@
             font-family: 'Traditional Arabic', 'Times New Roman', 'Arial', sans-serif;
         }
 
+        /* تنسيق النص المخصص داخل العريضة */
+        .petition-body b, .petition-body strong {
+            font-weight: 900 !important;
+            color: #000;
+        }
+        .petition-body u {
+            text-decoration: underline;
+            text-decoration-thickness: 1.5px;
+            text-underline-offset: 4px;
+        }
+
+        /* القائمة العائمة للتنسيق */
+        .floating-toolbar {
+            position: fixed;
+            background: #1e293b;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            gap: 8px;
+            z-index: 9999;
+            animation: fadeIn 0.2s ease-out;
+            pointer-events: auto;
+        }
+        
+        .floating-toolbar button {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: sans-serif;
+            transition: background 0.2s;
+        }
+
+        .floating-toolbar button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .floating-toolbar::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* تأثير النص التفاعلي */
         @keyframes gradient-shift {
             0% { background-position: 0% 50%; }
@@ -97,49 +155,74 @@
             animation: shine-glow 1s infinite;
         }
 
-        /* تنسيقات مخصصة للتصدير فقط تمنع الانحراف */
+        /* --- إعدادات الطباعة وتقسيم الصفحات --- */
+        
+        /* تعريف الصفحة الهوامش للطباعة الفعلية */
+        @page {
+            size: A4;
+            margin: 20mm 20mm 25mm 20mm; /* أعلى: 20، يمين/يسار: 20، أسفل: 25 لضمان الهامش */
+        }
+
+        /* الحاوية الأساسية للمعاينة */
         .pdf-export-container {
-            width: 210mm !important;
-            min-height: 297mm !important;
-            background-color: white !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            position: relative !important;
-            display: block !important;
-            direction: rtl !important;
-            box-sizing: border-box !important;
+            width: 210mm;
+            min-height: 297mm; /* ارتفاع ورقة A4 كحد أدنى */
+            background-color: white;
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            direction: rtl;
+            box-sizing: border-box;
+            height: auto; 
         }
 
         .pdf-content-wrapper {
-            padding-top: 40mm !important;
-            padding-bottom: 25mm !important;
-            padding-right: 25mm !important;
-            padding-left: 25mm !important;
-            direction: rtl !important;
-            text-align: justify !important;
-            unicode-bidi: embed !important;
-            box-sizing: border-box !important;
-            width: 100% !important;
+            padding: 20mm 20mm 25mm 20mm;
+            width: 100%;
+            box-sizing: border-box;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* عناصر لا يجب قصها بين الصفحات */
+        .no-break {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+        
+        /* النصوص الطويلة التي يجب أن تنقسم بسلاسة */
+        .content-break {
+            page-break-inside: auto;
+            break-inside: auto;
+        }
+
+        /* عند الطباعة، المتصفح سيتولى تقسيم الصفحات بناءً على @page */
         @media print {
-            @page {
-                size: A4;
-                margin: 0;
-            }
             body {
                 background-color: white !important;
             }
             #root {
                 display: none !important;
             }
-            #printable-document-content {
+            .no-print, .floating-toolbar {
+                display: none !important;
+            }
+            .pdf-export-container {
                 display: block !important;
-                visibility: visible !important;
-                position: absolute !important;
-                top: 0 !important;
-                right: 0 !important;
-                width: 210mm !important;
+                position: relative !important;
+                width: 100% !important;
+                height: auto !important;
+                margin: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important; 
+            }
+            .pdf-content-wrapper {
+                padding: 0 !important;
+                width: 100% !important;
+                display: block !important;
             }
         }
     </style>
